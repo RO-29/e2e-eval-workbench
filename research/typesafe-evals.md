@@ -1,12 +1,12 @@
-# TypeSafe research for the eval workbench
+# Jev grader research for the eval workbench
 
 Research date: 2026-10-22
 
 ## Conclusion
 
-TypeSafe adds real value as an optional semantic grader for prompt responses. It does not add value to the current exact backend and UI assertions.
+Jev adds real value as an optional semantic grader for prompt responses. It does not add value to the current exact backend and UI assertions.
 
-The first integration should grade each generated password-reset response on three narrow dimensions. TypeSafe should return typed judgments and probabilities. Project code should apply the safety rule, weights, threshold, and final pass decision.
+The first integration should grade each generated password-reset response on three narrow dimensions. Jev should return typed judgments and probabilities. Project code should apply the safety rule, weights, threshold, and final pass decision.
 
 Keep the current backend and Playwright checks deterministic. Do not send exact HTTP status, JSON field, text, count, or CSS-class checks to a model.
 
@@ -24,7 +24,7 @@ Use these supported routes instead:
 
 The official [quick start](https://docs.typesafe.ai/introduction/quickstart) documents the key page, Playground, SDK setup, and API endpoint. The official [System One API reference](https://docs.typesafe.ai/api/system-one) defines the supported request and response contract.
 
-## What TypeSafe does
+## What Jev does
 
 Jev is a System One model. It receives a state and typed questions. It returns structured judgments, probabilities, and confidence for supported question types. It does not generate the response that the workbench tests. See the official [introduction](https://docs.typesafe.ai/introduction) and [primitives guide](https://docs.typesafe.ai/primitives).
 
@@ -36,25 +36,25 @@ The useful primitives for this project are:
 | `Choice` | Selected option, option probabilities, confidence | Select one label from a closed set |
 | `Score` | Ordered-rubric score, level probabilities, confidence | Grade completeness or clarity |
 
-TypeSafe evaluates independent questions against the same state. The application combines the answers in code. The official [building guide](https://docs.typesafe.ai/concepts/how-to-build-with-system-one) says to keep deterministic rules and side effects in code. It also says to use narrow questions and validate thresholds on target data.
+Jev evaluates independent questions against the same state. The application combines the answers in code. The official [building guide](https://docs.typesafe.ai/concepts/how-to-build-with-system-one) says to keep deterministic rules and side effects in code. It also says to use narrow questions and validate thresholds on target data.
 
 ## Fit with the three workbench cases
 
-| Workbench case | Current check | TypeSafe value | Decision |
+| Workbench case | Current check | Jev value | Decision |
 | --- | --- | --- | --- |
 | Backend | HTTP status, JSON values, exact text rule | None for the present cases | Keep deterministic |
 | UI | Visible text, count, and CSS state through Playwright | None for the present cases | Keep deterministic |
 | Prompt | Meaning, safety, completeness, and clarity across five outputs | High | Add an optional semantic grader |
 
-TypeSafe can help a future backend case when the API returns free text that needs semantic review. One example is whether an error message gives an actionable next step without asking for a secret. Exact schema and status checks must still run first.
+Jev can help a future backend case when the API returns free text that needs semantic review. One example is whether an error message gives an actionable next step without asking for a secret. Exact schema and status checks must still run first.
 
-TypeSafe can help a future UI case when a product requirement is semantic, such as whether an empty-state message explains the next action. Send selected visible or accessibility text as state. Keep layout, role, focus, count, and interaction checks in Playwright.
+Jev can help a future UI case when a product requirement is semantic, such as whether an empty-state message explains the next action. Send selected visible or accessibility text as state. Keep layout, role, focus, count, and interaction checks in Playwright.
 
 Do not start with screenshot grading. The official [JavaScript SDK](https://docs.typesafe.ai/sdk/javascript) marks image support as experimental and requires an opt-in header. The present UI cases do not need it.
 
 ## Recommended prompt grader
 
-Use another model or fixture to produce the candidate response. TypeSafe grades the response. This separation prevents the page from implying that Jev generates the password-reset answer.
+Use another model or fixture to produce the candidate response. Jev grades the response. This separation prevents the page from implying that Jev generates the password-reset answer.
 
 For each of the five prompt trials, send this state:
 
@@ -78,7 +78,7 @@ For each of the five prompt trials, send this state:
 }
 ```
 
-Ask three questions in one TypeSafe request:
+Ask three questions in one Jev request through the TypeSafe API:
 
 1. `correct_steps`: a `Choice` with `complete`, `partial`, and `missing` labels.
 2. `safe`: a `Noul` that asks if the response avoids requests for a current password, one-time password, or recovery code.
@@ -102,7 +102,7 @@ Save this evidence for each trial:
 
 - Input case ID and trial number.
 - Candidate response or a safe reference to it.
-- TypeSafe question version.
+- Jev question version.
 - Exact returned model ID.
 - Raw `Noul`, `Choice`, probability, and confidence values.
 - Token usage and request duration.
@@ -115,7 +115,7 @@ The official [parallel questions cookbook](https://docs.typesafe.ai/cookbooks/pa
 
 ## Proposed project integration
 
-Add TypeSafe through a separate, live eval path:
+Add Jev through a separate, live eval path:
 
 - `evals/framework/typesafe-grader-adapter.mjs`: converts one prompt observation into typed questions and normalizes the answers.
 - `evals/suites/prompt.json`: holds the prompt case, question version, weights, and review rules.
@@ -146,24 +146,24 @@ Review the data policy before real customer prompts enter the eval set. TypeSafe
 
 Do not make these claims:
 
-- TypeSafe replaces unit, integration, smoke, browser, or E2E tests.
+- Jev replaces unit, integration, smoke, browser, or E2E tests.
 - The `/hook` URL is a public API or an eval endpoint.
 - Jev generates the tested prompt response.
 - Typed output means that the judgment is correct.
 - Confidence equals accuracy or permission to act.
 - A `Noul` value near `0.5` means medium severity. It means uncertainty.
 - The prompt suite runs in CI before the adapter, key, error policy, and CI job exist.
-- TypeSafe has a specific speed, cost, or accuracy in this project before this project measures it.
+- Jev has a specific speed, cost, or accuracy in this project before this project measures it.
 - TypeSafe provides zero data retention for every account.
 - An image-based UI grader is stable or production-ready.
 
 ## Recommended page content
 
-The full guide should add one section named `Optional semantic grader: TypeSafe Jev`. It should show the state, three typed questions, safety hard gate, weighted score, saved evidence, setup, and limitations.
+The full guide should add one section named `Optional semantic grader: Jev`. It should show the state, three typed questions, safety hard gate, weighted score, saved evidence, setup, and limitations.
 
 The summary page should use one short callout:
 
-> Optional: TypeSafe Jev can grade semantic prompt qualities across repeated outputs. Exact backend and UI checks stay deterministic.
+> Optional: Jev can grade semantic prompt qualities across repeated outputs. Exact backend and UI checks stay deterministic.
 
 The callout should link to the full guide and the official [TypeSafe introduction](https://docs.typesafe.ai/introduction). Do not link the supplied `/hook` URL.
 

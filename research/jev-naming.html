@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jev naming research for the eval workbench</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%230f172a%22/%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22-apple-system%2CSegoe%20UI%2Csans-serif%22%20font-size%3D%2217%22%20font-weight%3D%22800%22%20fill%3D%22white%22%3ED%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --accent: #0f172a;
+  --accent-soft: #0f172a14;
+  --accent-bd: #0f172a33;
+  --fg: #18181b;
+  --fg-dim: #525252;
+  --bg: #fafaf9;
+  --bg-card: #ffffff;
+  --bd: #e7e5e4;
+  --bd-strong: #d6d3d1;
+  --code-bg: #f4f4f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e7e5e4;
+    --fg-dim: #a8a29e;
+    --bg: #0c0a09;
+    --bg-card: #1c1917;
+    --bd: #292524;
+    --bd-strong: #44403c;
+    --code-bg: #1c1917;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font: 15.5px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0;
+  color: var(--fg); background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HERO */
+.hero {
+  background:
+    radial-gradient(ellipse at top right, rgba(255,255,255,.18), transparent 55%),
+    linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent), black 25%) 100%);
+  color: white;
+  padding: 3rem 1.5rem 2.4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute; right: -60px; top: -60px;
+  width: 280px; height: 280px;
+  background: rgba(255,255,255,.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-inner { max-width: 1040px; margin: 0 auto; position: relative; }
+.hero .pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .28rem .8rem;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+.hero h1 {
+  font-size: 2.35em; margin: 1rem 0 .55rem; line-height: 1.12;
+  font-weight: 800; letter-spacing: -0.025em;
+  color: white; border: none; padding: 0;
+}
+.hero h1::before { display: none; }
+.hero .subtitle {
+  font-size: 1.05em; opacity: .9; margin: 0; max-width: 760px;
+  line-height: 1.5;
+}
+.hero .meta {
+  margin-top: 1.4rem;
+  font-size: 13px; opacity: .78;
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+}
+.hero .meta span { display: inline-flex; align-items: center; gap: .35rem; }
+
+/* DOCNAV (sticky) */
+.docnav {
+  background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+  border-bottom: 1px solid var(--bd);
+  padding: .55rem 1.5rem;
+  font-size: 13.5px;
+  position: sticky; top: 0; z-index: 20;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.docnav-inner { max-width: 1040px; margin: 0 auto; display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
+.docnav a {
+  color: var(--fg-dim); text-decoration: none;
+  padding: .35rem .75rem; border-radius: 6px;
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+.docnav a:hover { color: var(--accent); background: var(--accent-soft); }
+.docnav a.current { color: var(--accent); background: var(--accent-soft); font-weight: 600; box-shadow: inset 0 0 0 1px var(--accent-bd); }
+
+/* MAIN */
+main { max-width: 1040px; margin: 0 auto; padding: 2.4rem 1.5rem 5rem; }
+
+/* TOC */
+.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--bd);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+}
+.toc-title { font-weight: 700; color: var(--accent); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .55rem; }
+.toc ul { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: 2rem; }
+.toc li { margin: .18rem 0; break-inside: avoid; }
+.toc li.h3 { padding-left: 1.2rem; font-size: 13.5px; color: var(--fg-dim); }
+.toc a { color: var(--fg-dim); text-decoration: none; }
+.toc a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 700px) { .toc ul { columns: 1; } }
+
+/* HEADINGS */
+h1, h2, h3, h4 { line-height: 1.25; scroll-margin-top: 5rem; }
+h1 { font-size: 1.95em; margin: 2.2em 0 .7em; padding-bottom: .35em; border-bottom: 2px solid var(--bd-strong); font-weight: 800; letter-spacing: -0.02em; }
+h2 {
+  font-size: 1.5em; margin: 2.4em 0 .6em; padding: 0 0 .25em .1em;
+  border-bottom: 1px solid var(--bd);
+  font-weight: 700; letter-spacing: -0.015em;
+  position: relative;
+}
+h2::before {
+  content: ""; position: absolute; left: -.9rem; top: .3em;
+  width: 4px; height: .85em; background: var(--accent); border-radius: 2px;
+}
+h3 { font-size: 1.2em; margin: 1.6em 0 .5em; font-weight: 700;
+     color: color-mix(in srgb, var(--fg), var(--accent) 22%); }
+h4 { font-size: 1.04em; margin: 1.3em 0 .35em; font-weight: 700; }
+h2 a, h3 a { color: inherit; }
+
+/* PROSE */
+p { margin: .7em 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+strong { color: color-mix(in srgb, var(--fg), var(--accent) 12%); }
+
+/* CODE */
+code {
+  font: 13px/1.45 ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--bd);
+  color: color-mix(in srgb, var(--fg), var(--accent) 22%);
+  word-break: break-word;
+}
+pre {
+  background: var(--code-bg); padding: 1rem 1.2rem; border-radius: 10px;
+  overflow-x: auto; border: 1px solid var(--bd);
+  margin: 1em 0; font-size: 13px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+pre code { background: transparent; padding: 0; border: 0; color: var(--fg); }
+
+/* TABLES */
+table {
+  border-collapse: separate; border-spacing: 0;
+  margin: 1.3em 0; width: 100%; font-size: 13.8px;
+  background: var(--bg-card);
+  border: 1px solid var(--bd); border-radius: 10px;
+  overflow: hidden;
+}
+th, td { border-bottom: 1px solid var(--bd); padding: 9px 14px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); color: color-mix(in srgb, var(--fg), var(--accent) 35%);
+     font-weight: 700; font-size: 12.8px; letter-spacing: .02em;
+     border-bottom: 1px solid var(--accent-bd); }
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: color-mix(in srgb, var(--bg-card) 97%, var(--accent) 3%); }
+tr:hover td { background: var(--accent-soft); }
+td code { font-size: 12.4px; }
+
+/* CALLOUTS */
+blockquote {
+  border-left: 4px solid var(--accent); margin: 1.2em 0;
+  padding: .65em 1.2em; background: var(--accent-soft);
+  color: var(--fg); border-radius: 0 8px 8px 0;
+}
+
+hr { border: 0; border-top: 1px solid var(--bd); margin: 2.5em 0; }
+
+ul, ol { padding-left: 1.4em; }
+li { margin: .25em 0; }
+li > p { margin: .3em 0; }
+
+/* MERMAID */
+.mermaid {
+  background: var(--bg-card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 1.4rem 1rem;
+  margin: 1.6em 0;
+  text-align: center;
+  overflow-x: auto;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+footer {
+  max-width: 1040px; margin: 3rem auto 2rem;
+  padding: 1.4rem 1.5rem; border-top: 1px solid var(--bd);
+  color: var(--fg-dim); font-size: 13px;
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between;
+}
+footer a { color: var(--accent); }
+
+/* mobile */
+@media (max-width: 720px) {
+  .hero { padding: 2.2rem 1.2rem 2rem; }
+  .hero h1 { font-size: 1.8em; }
+  main { padding: 1.8rem 1.1rem 4rem; }
+  h2::before { display: none; }
+  th, td { padding: 7px 10px; font-size: 13px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<header class="hero"><div class="hero-inner">
+  <span class="pill">Doc</span>
+  <h1>Jev naming research for the eval workbench</h1>
+  <p class="subtitle">Research date: 2026-10-22</p>
+  <div class="meta"><span>Audit 2026-06-09</span><span>GHL data infrastructure</span></div>
+</div></header>
+<div class="docnav"><div class="docnav-inner"><a href="DB_AUDIT.html" class="">Overview</a><a href="MASTER_INVENTORY.html" class="">Inventory</a><a href="MVP_AU_LAUNCH.html" class="">MVP</a><a href="SCHEMA_MANAGEMENT.html" class="">Schemas</a><a href="DATA_RESIDENCY_STRATEGY.html" class="">Residency</a><a href="terraform-modules.html" class="">Terraform</a><a href="application-db-references.html" class="">Apps</a><a href="infra-and-helm-db-references.html" class="">Infra</a></div></div>
+<main>
+<div class="toc"><div class="toc-title">On this page</div><ul><li class="h2"><a href="#conclusion">Conclusion</a></li><li class="h2"><a href="#what-each-name-means">What each name means</a></li><li class="h2"><a href="#is-jev-alone-clear-enough">Is Jev alone clear enough?</a></li><li class="h2"><a href="#current-model-identifiers">Current model identifiers</a></li><li class="h2"><a href="#recommended-main-page-wording">Recommended main-page wording</a></li><li class="h2"><a href="#recommended-detailed-guide-wording">Recommended detailed-guide wording</a></li><li class="h2"><a href="#existing-page-claims-to-change">Existing page claims to change</a></li><li class="h2"><a href="#accuracy-changes-to-make-with-the-naming-update">Accuracy changes to make with the naming update</a></li><li class="h2"><a href="#final-recommendation">Final recommendation</a></li></ul></div>
+<p>Research date: 2026-10-22</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Use <strong>Jev</strong> as the visible name for the optional semantic grader.</p>
+<p>Define it once as <strong>Jev, TypeSafe AI's System One model</strong>. After that first definition, use the names by role:</p>
+<ul>
+<li><strong>Jev</strong> makes the semantic judgment.</li>
+<li><strong>TypeSafe AI</strong> provides the hosted service, console, API, and SDKs.</li>
+<li><strong>System One</strong> names the model class and the API operation.</li>
+</ul>
+<p>Do not replace every TypeSafe name with Jev. Names such as <code>TYPESAFE_API_KEY</code>, <code>TypeSafeClient</code>, <code>api.typesafe.ai</code>, and the TypeSafe Playground are official product names. Keep them unchanged.</p>
+<h2 id="what-each-name-means">What each name means</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Meaning</th>
+<th>Use in the workbench</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TypeSafe AI</td>
+<td>The provider and API or SDK brand</td>
+<td>Use for the console, API, SDK, account, key, and source links</td>
+</tr>
+<tr>
+<td>System One</td>
+<td>A class of models that returns typed decisions, and the API operation at <code>POST /v1/systemone</code></td>
+<td>Use when the guide explains the architecture or wire contract</td>
+</tr>
+<tr>
+<td>Jev</td>
+<td>TypeSafe AI's flagship model and first System One model</td>
+<td>Use when the guide names the semantic grader or says what evaluates the reply</td>
+</tr>
+</tbody>
+</table>
+<p>The official introduction says that Jev is TypeSafe's flagship model and the first System One model. It says that Jev evaluates typed questions against state and returns structured results. See the <a href="https://docs.typesafe.ai/introduction">TypeSafe introduction</a>.</p>
+<p>The official quick start consistently tells the reader how to use <strong>Jev</strong>. It calls Jev TypeSafe's System One model. It then directs the reader to the TypeSafe console, SDK, and API. See the <a href="https://docs.typesafe.ai/introduction/quickstart">TypeSafe quick start</a>.</p>
+<p>The official JavaScript repository calls its package the TypeSafe AI JavaScript SDK. Its client method is <code>systemOne()</code>. The provider name, API operation, and model name have separate roles. See the <a href="https://github.com/typesafe-ai/typesafe-sdk-js">official JavaScript SDK</a>.</p>
+<h2 id="is-jev-alone-clear-enough">Is Jev alone clear enough?</h2>
+<p>No. A beginner cannot infer what Jev is from the name alone.</p>
+<p>The first use on each standalone page must define Jev. Use this short definition:</p>
+<blockquote>
+<p>Jev is TypeSafe AI's System One model for typed semantic judgments.</p>
+</blockquote>
+<p>After this definition, <strong>Jev grader</strong> or <strong>Jev semantic grader</strong> is accurate and short.</p>
+<p>Do not use <strong>TypeSafe Jev</strong> as the normal name. The official sources use <strong>Jev</strong> for the model and <strong>TypeSafe AI</strong> for the provider. The phrase <strong>Jev by TypeSafe AI</strong> is acceptable for the first introduction, but it is too long for repeated headings.</p>
+<p>Do not label the integration only <strong>System One</strong>. System One is broader than Jev. It describes the model class and the endpoint contract. The actual model in the example is Jev.</p>
+<h2 id="current-model-identifiers">Current model identifiers</h2>
+<p>The official model page currently lists these versioned IDs:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Current meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jev-1.13.0</code></td>
+<td>Current stable version behind <code>jev-latest</code></td>
+</tr>
+<tr>
+<td><code>jev-1.14.0</code></td>
+<td>Newer release behind <code>jev-preview</code></td>
+</tr>
+<tr>
+<td><code>jev-latest</code></td>
+<td>Moving stable alias and the SDK default</td>
+</tr>
+<tr>
+<td><code>jev-preview</code></td>
+<td>Moving alias for the newest release, including previews</td>
+</tr>
+</tbody>
+</table>
+<p>The official model page says that aliases can move without a code change. It recommends a versioned ID when thresholds depend on one model version. It also says that each response reports the versioned model ID. See <a href="https://docs.typesafe.ai/models#aliases">TypeSafe model IDs and aliases</a>.</p>
+<p>The model page contains a time-sensitive state on 2026-10-22. It lists Jev 1.14 as the newest release, but <code>jev-latest</code> still points to Jev 1.13. This is valid because <code>jev-preview</code> points to Jev 1.14. Do not describe <code>jev-latest</code> as the newest Jev version.</p>
+<p>For the beginner example, <code>jev-latest</code> matches the official quick start and reduces setup work. For a repeatable eval baseline, pin a versioned ID after calibration and record the response <code>model</code> field. The page should state this distinction next to the request example.</p>
+<p>The API also provides <code>GET /v1/models</code> for names that the account can send. See the <a href="https://api.typesafe.ai/openapi.json">official OpenAPI document</a>.</p>
+<h2 id="recommended-main-page-wording">Recommended main-page wording</h2>
+<p>Use this label:</p>
+<blockquote>
+<p>Optional Jev grader</p>
+</blockquote>
+<p>Use this heading:</p>
+<blockquote>
+<p>Use Jev for semantic checks.</p>
+</blockquote>
+<p>Use this short body:</p>
+<blockquote>
+<p>Jev is TypeSafe AI's System One model for typed semantic judgments. Use it for prompt completeness, safety, and clarity. Keep exact backend and UI checks in code. Jev grades the reply. It does not generate the reply.</p>
+</blockquote>
+<p>Link the callout to <code>/reusable-eval/#jev</code>.</p>
+<p>This wording keeps the summary short. It also tells a beginner what Jev is before the page uses the short name.</p>
+<h2 id="recommended-detailed-guide-wording">Recommended detailed-guide wording</h2>
+<p>Use <strong>Jev</strong> in the navigation and heading:</p>
+<ul>
+<li>Navigation: <code>Jev</code></li>
+<li>Eyebrow: <code>Optional semantic grader</code></li>
+<li>Heading: <code>Use Jev for semantic prompt grading.</code></li>
+</ul>
+<p>Start the section with:</p>
+<blockquote>
+<p>Jev is TypeSafe AI's System One model. It evaluates typed questions about a prompt reply. It does not replace the prompt model, the case runner, or exact checks.</p>
+</blockquote>
+<p>Use <strong>Jev</strong> for model actions:</p>
+<ul>
+<li>Jev evaluates the reply.</li>
+<li>Jev returns typed judgments and probabilities.</li>
+<li>Jev does not generate the tested reply.</li>
+<li>Jev grades all five trials.</li>
+</ul>
+<p>Use <strong>TypeSafe API</strong> for service actions:</p>
+<ul>
+<li>Send one Jev request through the TypeSafe API.</li>
+<li>Create a TypeSafe API key.</li>
+<li>Test questions in the TypeSafe Playground.</li>
+<li>Save the model ID returned by the TypeSafe API.</li>
+</ul>
+<p>Use <strong>System One</strong> only when the guide explains the model class or endpoint contract:</p>
+<ul>
+<li>Jev is a System One model.</li>
+<li>The request uses <code>POST /v1/systemone</code>.</li>
+<li>The SDK method is <code>systemOne()</code>.</li>
+</ul>
+<h2 id="existing-page-claims-to-change">Existing page claims to change</h2>
+<p>The current page has the correct technical boundary. It keeps exact backend and UI checks in code. It also says that the semantic grader does not generate the prompt reply. Keep those claims.</p>
+<p>Change these visible labels and sentences:</p>
+<table>
+<thead>
+<tr>
+<th>Current text</th>
+<th>Recommended text</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TypeSafe</code> in the navigation</td>
+<td><code>Jev</code></td>
+<td>The section describes the model that grades a reply</td>
+</tr>
+<tr>
+<td><code>Use TypeSafe where exact matching stops.</code></td>
+<td><code>Use Jev for semantic checks.</code></td>
+<td>Jev performs the judgment</td>
+</tr>
+<tr>
+<td><code>TypeSafe can return typed judgments</code></td>
+<td><code>Jev returns typed judgments and probabilities</code></td>
+<td>The model returns the judgment</td>
+</tr>
+<tr>
+<td><code>TypeSafe grades the reply</code></td>
+<td><code>Jev grades the reply</code></td>
+<td>The provider and model no longer share one role</td>
+</tr>
+<tr>
+<td><code>Use TypeSafe for the judgment that code cannot make.</code></td>
+<td><code>Use Jev for semantic prompt grading.</code></td>
+<td>This is clearer and does not imply that code cannot make any semantic check</td>
+</tr>
+<tr>
+<td><code>Use TypeSafe for semantic grading.</code></td>
+<td><code>Use Jev for semantic grading.</code></td>
+<td>Jev is the grader</td>
+</tr>
+<tr>
+<td><code>one TypeSafe request</code></td>
+<td><code>one Jev request through the TypeSafe API</code></td>
+<td>This names the model and transport</td>
+</tr>
+<tr>
+<td><code>TypeSafe request example</code></td>
+<td><code>Jev request through the TypeSafe API</code></td>
+<td>This is precise for a beginner</td>
+</tr>
+<tr>
+<td><code>Use the correct TypeSafe entry point.</code></td>
+<td><code>Call Jev through the TypeSafe API.</code></td>
+<td><code>/hook</code> is a console route, while <code>/v1/systemone</code> is the API operation</td>
+</tr>
+</tbody>
+</table>
+<p>Change the section anchor from <code>#typesafe</code> to <code>#jev</code>. Update the main-page link at the same time. A temporary hidden <code>#typesafe</code> compatibility anchor is optional if the old public link must continue to work.</p>
+<p>Keep these names unchanged:</p>
+<ul>
+<li><code>TYPESAFE_API_KEY</code></li>
+<li><code>TypeSafeClient</code></li>
+<li><code>https://api.typesafe.ai/v1/systemone</code></li>
+<li>TypeSafe Playground</li>
+<li>TypeSafe console</li>
+<li>TypeSafe API</li>
+<li>TypeSafe AI in source attribution and data-handling statements</li>
+</ul>
+<h2 id="accuracy-changes-to-make-with-the-naming-update">Accuracy changes to make with the naming update</h2>
+<p>The request example uses <code>jev-latest</code>. Add one sentence that says it is a moving alias. State that CI should pin a versioned Jev ID after the team calibrates the grader.</p>
+<p>Do not say that <code>jev-latest</code> always means the newest Jev release. The official model page currently maps it to Jev 1.13 while <code>jev-preview</code> maps to Jev 1.14.</p>
+<p>Do not say that every Jev answer includes a separate confidence field. The official confidence guide says that Choice and Score include <code>confidence</code>. Noul returns one probability, and a value near <code>0.5</code> signals uncertainty. See the <a href="https://docs.typesafe.ai/confidence">TypeSafe confidence guide</a>.</p>
+<p>Do not call Jev an eval framework. In this project, Jev is one optional model-based grader inside the reusable eval framework. The project still owns repeated trials, point mapping, thresholds, gates, evidence, reports, and CI behavior.</p>
+<h2 id="final-recommendation">Final recommendation</h2>
+<p>Use <strong>Jev semantic grader</strong> as the feature name.</p>
+<p>Use <strong>Jev, TypeSafe AI's System One model</strong> at the first mention on each page.</p>
+<p>Use <strong>TypeSafe API</strong> when the text discusses credentials, requests, SDKs, the console, or the hosted service.</p>
+<p>This naming matches the official sources and remains clear for a beginner.</p>
+</main>
+<footer>
+  <div>GHL data-infrastructure audit · 2026-06-09</div>
+  <div><a href="DB_AUDIT.html">Overview</a> · <a href="MASTER_INVENTORY.html">Inventory</a></div>
+</footer>
+<script>
+  const mqd = window.matchMedia('(prefers-color-scheme: dark)');
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: mqd.matches ? 'dark' : 'default',
+    flowchart: { curve: 'basis', padding: 14, useMaxWidth: true },
+    sequence:  { useMaxWidth: true },
+    gantt:     { useMaxWidth: true },
+    themeVariables: { fontFamily: '-apple-system,Segoe UI,sans-serif', primaryColor: '#0f172a' }
+  });
+</script>
+</body>
+</html>
