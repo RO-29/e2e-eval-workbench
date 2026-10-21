@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div class="wordmark">Task Lab</div>
+      <div class="status"><span></span> Test system online</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="kicker">A small system with visible evidence</p>
+        <h1>Make work.<br>Check behavior.</h1>
+      </div>
+      <p class="intro">This task board connects one user action to UI, API, browser, and eval checks.</p>
+    </section>
+
+    <section class="workspace" aria-label="Task workspace">
+      <article class="task-panel">
+        <div class="section-heading">
+          <h2>Tasks</h2>
+          <div id="summary" aria-live="polite">0 open / 0 done</div>
+        </div>
+
+        <form id="task-form">
+          <label>
+            Task title
+            <input id="title" name="title" minlength="3" maxlength="80" placeholder="Prepare release notes" required>
+          </label>
+          <label>
+            Priority
+            <select id="priority" name="priority">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+          <button type="submit">Add task</button>
+        </form>
+        <p id="error" role="alert"></p>
+        <ul id="task-list" aria-label="Tasks"></ul>
+        <div id="empty">No tasks yet. Add the first task.</div>
+      </article>
+
+      <aside class="evidence-panel">
+        <h2>Evidence map</h2>
+        <p>Each layer checks a different failure.</p>
+        <ol>
+          <li><strong>Unit</strong><span>Title and summary rules</span></li>
+          <li><strong>Integration</strong><span>API and in-memory store</span></li>
+          <li><strong>End-to-end</strong><span>Browser, UI, and API</span></li>
+          <li><strong>Eval</strong><span>Behavior score and quality gate</span></li>
+        </ol>
+      </aside>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
