@@ -14,7 +14,7 @@ This project shows how to check a UI and a backend.
 
 It includes unit tests, integration tests, browser tests, smoke tests, and weighted evals. The eval framework uses JSON files, so you can replace the task application with your product.
 
-The eval framework guide also compares backend, UI, and prompt evaluation. It explains repeated prompt trials and combined scores.
+The eval framework guide compares backend, UI, and prompt evaluation. It explains repeated prompt trials and combined scores. It also includes a collapsible demo report with evidence and grader results for all three cases.
 
 ## 1. What you will run
 

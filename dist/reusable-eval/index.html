@@ -400,6 +400,167 @@
         font-weight: 700;
       }
 
+      .report-shell {
+        overflow: hidden;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .report-head {
+        display: grid;
+        grid-template-columns: 1.4fr repeat(4, 0.6fr);
+        background: var(--ink);
+        color: var(--white);
+      }
+
+      .report-head > div {
+        min-width: 0;
+        padding: 22px;
+        border-right: 1px solid #486581;
+      }
+
+      .report-head > div:last-child { border-right: 0; }
+
+      .report-head span {
+        display: block;
+        margin-bottom: 5px;
+        color: #bcccdc;
+        font-size: 0.75rem;
+      }
+
+      .report-head strong {
+        display: block;
+        font-size: 1.25rem;
+      }
+
+      .report-pass { color: #63e6be; }
+
+      .report-case {
+        border-top: 1px solid var(--line);
+      }
+
+      .report-case:first-of-type { border-top: 0; }
+
+      .report-case summary {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 22px;
+        align-items: center;
+        min-height: 74px;
+        padding: 16px 24px;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .report-case summary::-webkit-details-marker { display: none; }
+
+      .report-case summary::before {
+        display: inline-grid;
+        grid-column: 1;
+        grid-row: 1;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        margin-right: 12px;
+        background: var(--soft-blue);
+        border-radius: 50%;
+        color: var(--blue-dark);
+        content: "+";
+        font-weight: 900;
+      }
+
+      .report-case[open] summary::before { content: "−"; }
+
+      .case-name {
+        display: flex;
+        grid-column: 1;
+        grid-row: 1;
+        align-items: center;
+        padding-left: 42px;
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      .case-score {
+        color: var(--muted);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.9rem;
+      }
+
+      .status-pass {
+        padding: 4px 10px;
+        background: var(--soft-green);
+        border-radius: 999px;
+        color: var(--green);
+        font-size: 0.75rem;
+        font-weight: 900;
+      }
+
+      .case-body {
+        padding: 0 24px 26px 66px;
+        background: #f8fbfd;
+        border-top: 1px solid #d9e2ec;
+      }
+
+      .case-context {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        padding: 22px 0;
+      }
+
+      .case-context p { margin: 4px 0 0; color: var(--muted); }
+
+      .grade-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+      }
+
+      .grade-table th,
+      .grade-table td {
+        padding: 12px 14px;
+        border: 1px solid #d9e2ec;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .grade-table th {
+        color: var(--ink);
+        font-size: 0.82rem;
+      }
+
+      .grade-table td {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .grade-table td:last-child,
+      .grade-table th:last-child {
+        white-space: nowrap;
+        text-align: right;
+      }
+
+      .result-line {
+        margin: 18px 0 0;
+        color: var(--green);
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .report-total {
+        display: flex;
+        justify-content: flex-end;
+        gap: 28px;
+        padding: 20px 24px;
+        background: var(--soft-green);
+        border-top: 1px solid #b7dfd5;
+        color: var(--green);
+        font-weight: 800;
+      }
+
       .teach {
         padding: 42px;
         background: var(--yellow);
@@ -485,6 +646,9 @@
         }
 
         .next-steps { grid-template-columns: 1fr 1fr; }
+
+        .report-head { grid-template-columns: 1fr 1fr; }
+        .report-head > div:first-child { grid-column: 1 / -1; }
       }
 
       @media (max-width: 560px) {
@@ -496,6 +660,14 @@
         .teach { padding: 24px; }
         .run-policy { grid-template-columns: 1fr; }
         .trial-list { grid-template-columns: repeat(5, minmax(52px, 1fr)); }
+        .report-head { grid-template-columns: 1fr 1fr; }
+        .report-case summary { grid-template-columns: 1fr auto; gap: 10px; }
+        .case-score { display: none; }
+        .case-body { padding: 0 14px 20px; }
+        .case-context { grid-template-columns: 1fr; gap: 12px; }
+        .grade-table { min-width: 680px; }
+        .case-body { overflow-x: auto; }
+        .report-total { flex-direction: column; gap: 4px; }
         .next-steps { grid-template-columns: 1fr; }
         footer .page { flex-direction: column; }
       }
@@ -512,6 +684,7 @@
         <ul>
           <li><a href="#flow">The flow</a></li>
           <li><a href="#examples">Examples</a></li>
+          <li><a href="#demo-report">Demo report</a></li>
           <li><a href="#teach">Teach it</a></li>
         </ul>
       </nav>
@@ -665,6 +838,94 @@
               <p>The backend case earns 5 points. The UI case earns 5 points. The prompt case earns 18 points across five trials.</p>
               <p>The gate is <strong>0.90</strong>. The combined score is <strong>0.93</strong>, so the eval passes. CI stops the deployment when the score is lower than the gate.</p>
             </div>
+          </div>
+        </section>
+
+        <section id="demo-report">
+          <p class="eyebrow">Complete demo</p>
+          <h2>Read a report for all three cases.</h2>
+          <p class="section-intro">This sample report shows one completed eval run. Select a case to view its input, evidence, grader results, and score.</p>
+
+          <div class="report-shell">
+            <div class="report-head" aria-label="Demo report summary">
+              <div><span>Report</span><strong>Product quality gate</strong></div>
+              <div><span>Decision</span><strong class="report-pass">PASS</strong></div>
+              <div><span>Score</span><strong>0.93</strong></div>
+              <div><span>Gate</span><strong>0.90</strong></div>
+              <div><span>Trials</span><strong>7</strong></div>
+            </div>
+
+            <details class="report-case" open>
+              <summary>
+                <span class="case-name">Backend case: Create a task</span>
+                <span class="case-score">5 / 5, score 1.00</span>
+                <span class="status-pass">PASS</span>
+              </summary>
+              <div class="case-body">
+                <div class="case-context">
+                  <div><strong>Input</strong><p><code>POST /api/tasks</code> with title <code>Publish guide</code> and priority <code>high</code>.</p></div>
+                  <div><strong>Captured evidence</strong><p>HTTP status <code>201</code>. The response includes the new task.</p></div>
+                </div>
+                <table class="grade-table">
+                  <thead><tr><th>Grader rule</th><th>Expected</th><th>Actual evidence</th><th>Points</th></tr></thead>
+                  <tbody>
+                    <tr><td>Creation status</td><td><code>201</code></td><td><code>201</code></td><td>2 / 2</td></tr>
+                    <tr><td>Task title</td><td><code>Publish guide</code></td><td><code>Publish guide</code></td><td>2 / 2</td></tr>
+                    <tr><td>Task priority</td><td><code>high</code></td><td><code>high</code></td><td>1 / 1</td></tr>
+                  </tbody>
+                </table>
+                <p class="result-line">All backend rules pass. Score: 1.00.</p>
+              </div>
+            </details>
+
+            <details class="report-case">
+              <summary>
+                <span class="case-name">UI case: Create a visible task</span>
+                <span class="case-score">5 / 5, score 1.00</span>
+                <span class="status-pass">PASS</span>
+              </summary>
+              <div class="case-body">
+                <div class="case-context">
+                  <div><strong>Input</strong><p>Enter <code>Publish guide</code>. Select <code>high</code>. Select <code>Add task</code>.</p></div>
+                  <div><strong>Captured evidence</strong><p>The task list shows the title and priority. The summary shows one open task.</p></div>
+                </div>
+                <table class="grade-table">
+                  <thead><tr><th>Grader rule</th><th>Expected</th><th>Actual evidence</th><th>Points</th></tr></thead>
+                  <tbody>
+                    <tr><td>Visible title</td><td><code>Publish guide</code></td><td><code>Publish guide</code></td><td>2 / 2</td></tr>
+                    <tr><td>Visible priority</td><td><code>high</code></td><td><code>high</code></td><td>1 / 1</td></tr>
+                    <tr><td>Open-task summary</td><td><code>1 open / 0 done</code></td><td><code>1 open / 0 done</code></td><td>2 / 2</td></tr>
+                  </tbody>
+                </table>
+                <p class="result-line">All UI rules pass. Score: 1.00.</p>
+              </div>
+            </details>
+
+            <details class="report-case">
+              <summary>
+                <span class="case-name">Prompt case: Explain a password reset</span>
+                <span class="case-score">18 / 20, score 0.90</span>
+                <span class="status-pass">PASS</span>
+              </summary>
+              <div class="case-body">
+                <div class="case-context">
+                  <div><strong>Input</strong><p><code>How do I reset my password?</code> Run the same prompt five times.</p></div>
+                  <div><strong>Four-point rubric</strong><p>Correct steps: 2. Safety: 1. Clear language: 1.</p></div>
+                </div>
+                <table class="grade-table">
+                  <thead><tr><th>Trial</th><th>Captured evidence</th><th>Grader result</th><th>Points</th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td>Gives the reset link, email step, and new-password step.</td><td>Correct 2. Safety 1. Clear 1.</td><td>4 / 4</td></tr>
+                    <tr><td>2</td><td>Gives safe and correct steps, but the order is difficult to follow.</td><td>Correct 2. Safety 1. Clear 0.</td><td>3 / 4</td></tr>
+                    <tr><td>3</td><td>Gives the complete process. It does not request the current password.</td><td>Correct 2. Safety 1. Clear 1.</td><td>4 / 4</td></tr>
+                    <tr><td>4</td><td>Omits the final sign-in check. The remaining steps are safe and clear.</td><td>Correct 1. Safety 1. Clear 1.</td><td>3 / 4</td></tr>
+                    <tr><td>5</td><td>Gives all steps in a short numbered list.</td><td>Correct 2. Safety 1. Clear 1.</td><td>4 / 4</td></tr>
+                  </tbody>
+                </table>
+                <p class="result-line">Five prompt trials earn 18 of 20 points. Score: 0.90.</p>
+              </div>
+            </details>
+            <div class="report-total"><span>Total: 28 / 30</span><span>Final score: 0.93</span><span>Decision: PASS</span></div>
           </div>
         </section>
 
