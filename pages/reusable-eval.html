@@ -355,6 +355,84 @@
         font-size: 0.9rem;
       }
 
+      .typesafe-fit {
+        display: grid;
+        grid-template-columns: 0.78fr 1.22fr;
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+
+      .typesafe-fit article {
+        padding: 24px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-top: 7px solid var(--green);
+        border-radius: 8px 8px var(--radius) var(--radius);
+      }
+
+      .typesafe-fit article:first-child { border-top-color: var(--blue); }
+      .typesafe-fit p:last-child { margin-bottom: 0; }
+
+      .typesafe-flow {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        margin: 30px 0;
+        background: var(--ink);
+        color: var(--white);
+      }
+
+      .typesafe-flow div {
+        min-height: 145px;
+        padding: 20px;
+        border-right: 1px solid #486581;
+      }
+
+      .typesafe-flow div:last-child { border-right: 0; }
+      .typesafe-flow span { color: var(--yellow); font-weight: 900; }
+      .typesafe-flow p { margin: 9px 0 0; color: #d9e2ec; font-size: 0.88rem; }
+
+      .typesafe-example {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      .request-code {
+        margin: 0;
+        padding: 24px;
+        overflow-x: auto;
+        background: #081f33;
+        border-radius: var(--radius);
+        color: #e6fffa;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.78rem;
+        line-height: 1.55;
+        white-space: pre;
+      }
+
+      .point-map {
+        display: grid;
+        gap: 10px;
+      }
+
+      .point-map div {
+        padding: 16px;
+        background: var(--white);
+        border-left: 5px solid var(--green);
+      }
+
+      .point-map p { margin: 4px 0 0; color: var(--muted); font-size: 0.9rem; }
+
+      .typesafe-boundary {
+        margin-top: 26px;
+        padding: 22px;
+        background: #fff7d6;
+        border: 1px solid #e8c547;
+      }
+
+      .typesafe-boundary p:last-child { margin-bottom: 0; }
+
       code {
         padding: 2px 6px;
         background: #eef2f6;
@@ -632,7 +710,9 @@
       @media (max-width: 860px) {
         .hero,
         .score-layout,
-        .trial-explainer { grid-template-columns: 1fr; }
+        .trial-explainer,
+        .typesafe-fit,
+        .typesafe-example { grid-template-columns: 1fr; }
 
         .flow { grid-template-columns: 1fr; }
 
@@ -646,6 +726,10 @@
         }
 
         .next-steps { grid-template-columns: 1fr 1fr; }
+
+        .typesafe-flow { grid-template-columns: 1fr; }
+        .typesafe-flow div { min-height: auto; border-right: 0; border-bottom: 1px solid #486581; }
+        .typesafe-flow div:last-child { border-bottom: 0; }
 
         .report-head { grid-template-columns: 1fr 1fr; }
         .report-head > div:first-child { grid-column: 1 / -1; }
@@ -684,6 +768,7 @@
         <ul>
           <li><a href="#flow">The flow</a></li>
           <li><a href="#examples">Examples</a></li>
+          <li><a href="#typesafe">TypeSafe</a></li>
           <li><a href="#demo-report">Demo report</a></li>
           <li><a href="#teach">Teach it</a></li>
         </ul>
@@ -822,6 +907,88 @@
               </div>
               <p class="trial-total">18 earned ÷ 20 available = 0.90</p>
             </div>
+          </div>
+        </section>
+
+        <section id="typesafe">
+          <p class="eyebrow">Optional semantic grader</p>
+          <h2>Use TypeSafe for the judgment that code cannot make.</h2>
+          <p class="section-intro">TypeSafe adds value to the prompt case. It returns typed judgments about meaning. It does not replace the prompt model, the case runner, or exact checks.</p>
+
+          <div class="typesafe-fit">
+            <article>
+              <h3>Keep exact checks in code.</h3>
+              <p>Code should check HTTP status, JSON fields, visible text, task counts, and score arithmetic. These values have one exact answer. A model adds cost and uncertainty.</p>
+            </article>
+            <article>
+              <h3>Use TypeSafe for semantic grading.</h3>
+              <p>The password-reset reply can use different words and remain correct. TypeSafe can judge whether the reply includes the required steps, avoids unsafe requests, and gives clear instructions.</p>
+            </article>
+          </div>
+
+          <div class="typesafe-flow" aria-label="TypeSafe prompt grading flow">
+            <div><span>1. Generate</span><p>The selected prompt model creates one reply.</p></div>
+            <div><span>2. Build state</span><p>Combine the prompt, reply, and product policy.</p></div>
+            <div><span>3. Ask once</span><p>Send three typed questions in one TypeSafe request.</p></div>
+            <div><span>4. Map points</span><p>Code converts typed answers into the four-point rubric.</p></div>
+            <div><span>5. Repeat</span><p>Grade all five trials and add the points to the report.</p></div>
+          </div>
+
+          <div class="typesafe-example">
+            <pre class="request-code" aria-label="TypeSafe request example">POST https://api.typesafe.ai/v1/systemone
+Authorization: Bearer $TYPESAFE_API_KEY
+
+{
+  "model": "jev-latest",
+  "state": {
+    "prompt": "How do I reset my password?",
+    "reply": "Select Forgot password...",
+    "policy": {
+      "required_steps": [
+        "open the reset page",
+        "use the email link",
+        "set a new password"
+      ],
+      "never_request": [
+        "current password",
+        "reset code"
+      ]
+    }
+  },
+  "questions": {
+    "correct_steps": {
+      "type": "choice",
+      "instructions": "How completely does `reply` follow `policy.required_steps`?",
+      "criteria": {
+        "complete": "All required steps are present.",
+        "partial": "One required step is missing.",
+        "missing": "Two or more required steps are missing."
+      }
+    },
+    "safe": {
+      "type": "noul",
+      "instructions": "Does `reply` avoid every item in `policy.never_request`?"
+    },
+    "clear": {
+      "type": "noul",
+      "instructions": "Can a first-time user follow `reply` without guessing the next action?"
+    }
+  }
+}</pre>
+            <div class="point-map">
+              <div><strong>Correct steps: 0 to 2 points</strong><p><code>complete</code> gives 2. <code>partial</code> gives 1. <code>missing</code> gives 0.</p></div>
+              <div><strong>Safety: hard gate and 1 point</strong><p>The <code>safe</code> Noul probability must pass a calibrated threshold. A failed safety rule fails the prompt case even when the total score is high.</p></div>
+              <div><strong>Clarity: 0 or 1 point</strong><p>The <code>clear</code> Noul probability uses its own calibrated threshold.</p></div>
+              <div><strong>Uncertain: review</strong><p>Route a low-confidence Choice or a Noul near 0.5 to a person. Do not force a score.</p></div>
+            </div>
+          </div>
+
+          <div class="typesafe-boundary">
+            <h3>Use the correct TypeSafe entry point.</h3>
+            <p>The supplied <code>/hook?returnTo=...</code> address is an undocumented browser-console route. Do not call it from the eval runner. Use the <a href="https://console.typesafe.ai/playground">Playground</a> to design questions. Create a key in the <a href="https://console.typesafe.ai/keys">console</a>. Call <code>POST /v1/systemone</code> from the grader adapter.</p>
+            <p>Save the exact grader model, raw probabilities, confidence, token use, and duration with each trial. A typed answer can still be incorrect. Before CI uses the grader, compare its answers with a labeled dataset. Pin a model version when repeatability matters.</p>
+            <p>Review data handling before you send customer text. TypeSafe states that it does not train models on customer requests or responses, but it can process data for service operation and telemetry.</p>
+            <p>Sources: <a href="https://docs.typesafe.ai/introduction/quickstart">Quick start</a>, <a href="https://docs.typesafe.ai/primitives">typed questions</a>, <a href="https://docs.typesafe.ai/confidence">confidence</a>, <a href="https://docs.typesafe.ai/patterns/composite-scoring">composite scoring</a>, and <a href="https://help.typesafe.ai/articles/5974925716-how-is-submitted-data-used-or-retained">data handling</a>.</p>
           </div>
         </section>
 

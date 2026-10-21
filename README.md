@@ -16,6 +16,8 @@ It includes unit tests, integration tests, browser tests, smoke tests, and weigh
 
 The eval framework guide compares backend, UI, and prompt evaluation. It explains repeated prompt trials and combined scores. It also includes a collapsible demo report with evidence and grader results for all three cases.
 
+The guide also shows one useful TypeSafe integration. TypeSafe acts as an optional semantic grader for prompt replies. Exact backend and UI checks stay deterministic. The full research note is in `research/typesafe-evals.md`.
+
 ## 1. What you will run
 
 The sample product is a task application. A user can create a task, select a priority, and complete the task.
@@ -328,6 +330,7 @@ JSON suite -> adapter -> grader -> report
 | Suite | `evals/suites/ui.json` | Defines browser steps and criteria |
 | Worked prompt example | `examples/prompt-suite.json` | Shows five trials and a weighted rubric |
 | Worked report example | `examples/demo-report.json` | Shows one combined report for all three case types |
+| TypeSafe research | `research/typesafe-evals.md` | Defines the useful semantic-grader fit, API flow, limits, and CI plan |
 | HTTP adapter | `evals/framework/http-adapter.mjs` | Runs HTTP requests and captures responses |
 | Browser adapter | `evals/framework/browser-adapter.mjs` | Runs browser actions and captures UI evidence |
 | Core grader | `evals/framework/core.mjs` | Grades criteria and calculates scores |

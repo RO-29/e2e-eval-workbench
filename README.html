@@ -278,6 +278,7 @@ footer a { color: var(--accent); }
 <p>This project shows how to check a UI and a backend.</p>
 <p>It includes unit tests, integration tests, browser tests, smoke tests, and weighted evals. The eval framework uses JSON files, so you can replace the task application with your product.</p>
 <p>The eval framework guide compares backend, UI, and prompt evaluation. It explains repeated prompt trials and combined scores. It also includes a collapsible demo report with evidence and grader results for all three cases.</p>
+<p>The guide also shows one useful TypeSafe integration. TypeSafe acts as an optional semantic grader for prompt replies. Exact backend and UI checks stay deterministic. The full research note is in <code>research/typesafe-evals.md</code>.</p>
 <h2 id="1-what-you-will-run">1. What you will run</h2>
 <p>The sample product is a task application. A user can create a task, select a priority, and complete the task.</p>
 <p>The project checks the product at five levels:</p>
@@ -639,6 +640,11 @@ skipped 0
 <td>Worked report example</td>
 <td><code>examples/demo-report.json</code></td>
 <td>Shows one combined report for all three case types</td>
+</tr>
+<tr>
+<td>TypeSafe research</td>
+<td><code>research/typesafe-evals.md</code></td>
+<td>Defines the useful semantic-grader fit, API flow, limits, and CI plan</td>
 </tr>
 <tr>
 <td>HTTP adapter</td>
