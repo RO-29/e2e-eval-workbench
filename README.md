@@ -7,6 +7,7 @@
 | UI runner | Playwright with Chromium |
 | Eval gate | `0.90` |
 | Live guide | <https://e2e-eval-workbench.pages.dev/> |
+| Beginner eval guide | <https://e2e-eval-workbench.pages.dev/reusable-eval/> |
 | License | No license file |
 
 This project shows how to check a UI and a backend.
