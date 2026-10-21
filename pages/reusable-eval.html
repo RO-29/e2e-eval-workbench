@@ -1121,6 +1121,7 @@
       <nav class="page" aria-label="Main navigation">
         <a class="brand" href="#top">Reusable Eval Framework</a>
         <ul>
+          <li><a href="#framework">Six stages</a></li>
           <li><a href="#examples">Eval types</a></li>
           <li><a href="#jev">Jev</a></li>
           <li><a href="#demo-report">Demo report</a></li>
@@ -1148,6 +1149,44 @@
           <strong>Why teams need this now</strong>
           <p>Products now combine APIs, interfaces, and variable model output. One shared eval flow gives every team the same evidence, scores, and CI gate, so more teams can adopt evals.</p>
         </aside>
+
+        <section id="framework">
+          <p class="eyebrow">The framework</p>
+          <h2>Six reusable stages run every eval.</h2>
+          <p class="section-intro">Keep this structure for Backend, UI, and Prompt evals. Change the adapter, evidence, and grader for each product surface.</p>
+          <div class="flow" aria-label="Six stages of the reusable eval framework">
+            <article class="flow-step">
+              <span class="step-number">01</span>
+              <h3>Case</h3>
+              <p>Define the action, input, and expected result.</p>
+            </article>
+            <article class="flow-step">
+              <span class="step-number">02</span>
+              <h3>Adapter</h3>
+              <p>Connect the framework to an API, browser, or model.</p>
+            </article>
+            <article class="flow-step">
+              <span class="step-number">03</span>
+              <h3>Trial</h3>
+              <p>Run the case once or repeat it for variable output.</p>
+            </article>
+            <article class="flow-step">
+              <span class="step-number">04</span>
+              <h3>Evidence</h3>
+              <p>Capture the response, page state, or model reply.</p>
+            </article>
+            <article class="flow-step">
+              <span class="step-number">05</span>
+              <h3>Grader</h3>
+              <p>Compare the evidence with exact rules or a rubric.</p>
+            </article>
+            <article class="flow-step">
+              <span class="step-number">06</span>
+              <h3>Report</h3>
+              <p>Combine the points and apply the CI gate.</p>
+            </article>
+          </div>
+        </section>
 
         <section id="flow">
           <p class="eyebrow">Working demo</p>

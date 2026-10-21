@@ -7,6 +7,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('the demo shows one feature across all three eval lanes', async ({ page }) => {
+  await expect(page.locator('#framework .flow-step')).toHaveCount(6);
+  await expect(page.getByRole('link', { name: 'Six stages' })).toHaveAttribute('href', '#framework');
   await expect(page.locator('main section').last()).toHaveAttribute('id', 'flow');
   await expect(page.getByRole('link', { name: 'Eval types' })).toHaveAttribute('href', '#examples');
   await expect(page.locator('.eval-lane')).toHaveCount(3);
