@@ -1121,11 +1121,11 @@
       <nav class="page" aria-label="Main navigation">
         <a class="brand" href="#top">Reusable Eval Framework</a>
         <ul>
-          <li><a href="#flow">The flow</a></li>
-          <li><a href="#examples">Examples</a></li>
+          <li><a href="#examples">Eval types</a></li>
           <li><a href="#jev">Jev</a></li>
           <li><a href="#demo-report">Demo report</a></li>
           <li><a href="#teach">Teach it</a></li>
+          <li><a href="#flow">Working demo</a></li>
         </ul>
       </nav>
     </header>
@@ -1150,9 +1150,9 @@
         </aside>
 
         <section id="flow">
-          <p class="eyebrow">The model</p>
-          <h2>Every eval uses the same six stages.</h2>
-          <p class="section-intro">The product and run count can change. The stages stay the same. This makes the framework reusable.</p>
+          <p class="eyebrow">Working demo</p>
+          <h2>Watch one feature cross all six stages.</h2>
+          <p class="section-intro">The page first explains the framework. This final demo then runs Backend, UI, and Prompt evals in one shared flow.</p>
 
           <div class="eval-demo" id="eval-demo">
             <div class="demo-toolbar">
@@ -1573,6 +1573,9 @@ Authorization: Bearer $TYPESAFE_API_KEY
     </footer>
 
     <script>
+      const flowSection = document.querySelector('#flow');
+      flowSection.parentElement.append(flowSection);
+
       const button = document.querySelector('#show-script');
       const script = document.querySelector('#teach-script');
 
