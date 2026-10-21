@@ -1,0 +1,55 @@
+{
+  "id": "ui",
+  "name": "UI behavior",
+  "threshold": 0.9,
+  "cases": [
+    {
+      "id": "create-visible-task",
+      "name": "User creates a visible task",
+      "steps": [
+        { "action": "goto", "path": "/" },
+        { "action": "fill", "label": "Task title", "value": "Publish guide" },
+        { "action": "select", "label": "Priority", "value": "high" },
+        { "action": "click", "role": "button", "name": "Add task" },
+        { "action": "waitForText", "selector": "#summary", "value": "1 open / 0 done" },
+        { "action": "captureText", "key": "tasks", "selector": "#task-list" },
+        { "action": "captureText", "key": "summary", "selector": "#summary" }
+      ],
+      "criteria": [
+        { "id": "title", "description": "The task title is visible.", "path": "captures.tasks", "weight": 2, "grader": { "type": "includes", "expected": "Publish guide" } },
+        { "id": "priority", "description": "The selected priority is visible.", "path": "captures.tasks", "weight": 1, "grader": { "type": "includes", "expected": "high" } },
+        { "id": "summary", "description": "The open count changes.", "path": "captures.summary", "weight": 2, "grader": { "type": "equals", "expected": "1 open / 0 done" } }
+      ]
+    },
+    {
+      "id": "complete-task",
+      "name": "User completes a task",
+      "steps": [
+        { "action": "goto", "path": "/" },
+        { "action": "fill", "label": "Task title", "value": "Review report" },
+        { "action": "click", "role": "button", "name": "Add task" },
+        { "action": "click", "role": "button", "name": "Mark Review report done" },
+        { "action": "waitForText", "selector": "#summary", "value": "0 open / 1 done" },
+        { "action": "captureText", "key": "summary", "selector": "#summary" },
+        { "action": "captureClass", "key": "taskClass", "selector": "#task-list li" }
+      ],
+      "criteria": [
+        { "id": "summary", "description": "The done count changes.", "path": "captures.summary", "weight": 2, "grader": { "type": "equals", "expected": "0 open / 1 done" } },
+        { "id": "style", "description": "The task has the done state.", "path": "captures.taskClass", "weight": 1, "grader": { "type": "includes", "expected": "done" } }
+      ]
+    },
+    {
+      "id": "invalid-task",
+      "name": "Browser blocks a short title",
+      "steps": [
+        { "action": "goto", "path": "/" },
+        { "action": "fill", "label": "Task title", "value": "x" },
+        { "action": "click", "role": "button", "name": "Add task" },
+        { "action": "captureCount", "key": "taskCount", "selector": "#task-list li" }
+      ],
+      "criteria": [
+        { "id": "no-task", "description": "No invalid task appears.", "path": "captures.taskCount", "weight": 2, "grader": { "type": "equals", "expected": 0 } }
+      ]
+    }
+  ]
+}

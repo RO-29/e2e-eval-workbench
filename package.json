@@ -11,7 +11,7 @@
     "test:e2e": "playwright test",
     "test:smoke": "node tests/smoke/run.mjs",
     "eval": "node evals/run.mjs",
-    "check": "npm run test && npm run eval && npm run test:e2e",
+    "check": "npm run test && npm run eval && npm run test:e2e && npm run build:artifact",
     "video": "node scripts/record-demo.mjs",
     "build:artifact": "node scripts/build-artifact.mjs"
   },

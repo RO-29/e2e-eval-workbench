@@ -3,228 +3,177 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Testing and Evals: A Beginner Guide</title>
+  <title>Testing and Evals: A Visual Beginner Guide</title>
   <style>
     :root {
-      --ink: #10263b; --muted: #526579; --paper: #f7fafc; --white: #fff;
-      --line: #b8c8d6; --cyan: #9fe7e5; --cyan-dark: #087c80;
-      --yellow: #ffd866; --red: #e74d3c;
-      font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
-      color: var(--ink); background: var(--paper);
+      --ink:#12243a; --navy:#183b56; --paper:#f5f1e8; --white:#fffefa;
+      --line:#9eacb5; --blue:#54b8d0; --blue-soft:#dff4f5; --green:#45a675;
+      --yellow:#f5c84c; --orange:#eb794b; --red:#c9473d; --muted:#546576;
+      --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+      --sans:"Avenir Next",Avenir,"Trebuchet MS",sans-serif;
+      color:var(--ink); background:var(--paper); font-family:var(--sans);
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { margin: 0; background: var(--paper); }
-    a { color: inherit; }
-    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    .shell { width: min(1180px, calc(100% - 32px)); margin: auto; }
-    .topbar { position: sticky; top: 0; z-index: 10; border-bottom: 2px solid var(--ink); background: rgba(247,250,252,.96); backdrop-filter: blur(10px); }
-    .topbar .shell { display: flex; justify-content: space-between; align-items: center; min-height: 64px; gap: 20px; }
-    .brand { font-size: 1.05rem; font-weight: 850; letter-spacing: -.03em; }
-    .progress { display: flex; gap: 18px; font-size: .82rem; font-weight: 700; }
-    .progress a { text-decoration: none; }
-    .progress a:hover, .progress a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
-    .hero { display: grid; grid-template-columns: 1.25fr .75fr; min-height: 650px; border-bottom: 2px solid var(--ink); }
-    .hero-copy { display: flex; flex-direction: column; justify-content: center; padding: 72px 7vw 72px max(16px, calc((100vw - 1180px) / 2)); border-right: 2px solid var(--ink); background: var(--white); }
-    .kicker { margin: 0 0 26px; font-weight: 800; color: var(--cyan-dark); }
-    h1 { max-width: 10ch; margin: 0; font-size: clamp(3.8rem, 8vw, 7.6rem); line-height: .9; letter-spacing: -.075em; }
-    .hero-copy p:last-child { max-width: 47ch; margin: 30px 0 0; font-size: 1.25rem; line-height: 1.55; }
-    .hero-map { display: flex; flex-direction: column; justify-content: center; padding: 46px max(16px, calc((100vw - 1180px) / 2)) 46px 46px; background: var(--cyan); }
-    .map-step { display: grid; grid-template-columns: 42px 1fr; gap: 14px; align-items: center; min-height: 82px; border-bottom: 1px solid var(--ink); }
-    .map-step:last-child { border-bottom: 0; }
-    .map-step b { display: grid; place-items: center; width: 34px; height: 34px; border: 2px solid var(--ink); border-radius: 50%; background: var(--white); }
-    .map-step span { font-weight: 750; line-height: 1.35; }
-    main { overflow: hidden; }
-    section { padding: 84px 0; border-bottom: 2px solid var(--ink); }
-    .section-head { display: grid; grid-template-columns: .72fr 1.28fr; gap: 60px; margin-bottom: 40px; }
-    h2 { margin: 0; max-width: 15ch; font-size: clamp(2.2rem, 5vw, 4.3rem); line-height: 1; letter-spacing: -.055em; }
-    .lead { max-width: 62ch; margin: 0; font-size: 1.15rem; line-height: 1.65; }
-    .definition { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid var(--ink); background: var(--white); }
-    .definition > div { padding: 34px; }
-    .definition > div:first-child { border-right: 2px solid var(--ink); background: var(--yellow); }
-    .definition h3, .eval-panel h3 { margin: 0 0 12px; font-size: 1.35rem; }
-    .definition p, .eval-panel p { margin: 0; line-height: 1.6; }
-    .plain-example { margin-top: 22px; padding: 20px 24px; border-left: 8px solid var(--cyan-dark); background: #eaf7f7; line-height: 1.55; }
-    .video-frame { padding: 12px; border: 2px solid var(--ink); background: var(--ink); box-shadow: 12px 12px 0 var(--yellow); }
-    video { display: block; width: 100%; aspect-ratio: 16/9; background: #06111c; }
-    .video-note { margin: 26px 0 0; max-width: 70ch; line-height: 1.6; }
-    .request-flow { display: grid; grid-template-columns: repeat(5, 1fr); border: 2px solid var(--ink); background: var(--white); }
-    .request-flow article { position: relative; min-height: 190px; padding: 26px 20px; border-right: 1px solid var(--ink); }
-    .request-flow article:last-child { border-right: 0; background: var(--cyan); }
-    .request-flow article:not(:last-child)::after { position: absolute; top: 30px; right: -14px; z-index: 2; display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid var(--ink); border-radius: 50%; background: var(--yellow); content: ">"; font-weight: 900; }
-    .request-flow small { display: block; margin-bottom: 28px; font-weight: 800; color: var(--cyan-dark); }
-    .request-flow b { display: block; margin-bottom: 10px; font-size: 1.08rem; }
-    .request-flow p { margin: 0; font-size: .9rem; line-height: 1.5; }
-    .checks { border-top: 2px solid var(--ink); }
-    .check { display: grid; grid-template-columns: 180px 1fr 1fr; border-bottom: 1px solid var(--ink); background: var(--white); }
-    .check-name { padding: 28px; border-right: 1px solid var(--ink); }
-    .check-name strong { display: block; font-size: 1.4rem; }
-    .check-name span { display: inline-block; margin-top: 12px; padding: 5px 9px; border: 1px solid var(--ink); background: var(--yellow); font-size: .76rem; font-weight: 800; }
-    .check > div:not(.check-name) { padding: 28px; border-right: 1px solid var(--line); }
-    .check > div:last-child { border-right: 0; }
-    .check h3 { margin: 0 0 8px; font-size: 1rem; }
-    .check p { margin: 0; line-height: 1.55; }
-    .check code, .repo-row code { color: #0a6472; }
-    .eval-focus { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-    .eval-panel { padding: 30px; border: 2px solid var(--ink); background: var(--white); }
-    .eval-panel:first-child { box-shadow: 10px 10px 0 var(--cyan); }
-    .eval-panel:last-child { box-shadow: 10px 10px 0 var(--yellow); }
-    .eval-panel p { margin-bottom: 18px; }
-    .code-block { overflow-x: auto; margin: 0; padding: 18px; border: 1px solid var(--ink); background: var(--ink); color: #eaf7f7; font-size: .86rem; line-height: 1.55; white-space: pre; }
-    .score-bar { display: grid; grid-template-columns: 90% 10%; height: 34px; margin-top: 18px; border: 2px solid var(--ink); }
-    .score-bar span:first-child { display: grid; place-items: center; background: var(--cyan); font-size: .8rem; font-weight: 850; }
-    .score-bar span:last-child { background: repeating-linear-gradient(45deg, #fff, #fff 5px, #dbe4eb 5px, #dbe4eb 10px); }
-    .pipeline { display: grid; grid-template-columns: repeat(6, 1fr); border: 2px solid var(--ink); background: var(--white); }
-    .pipe-step { min-height: 175px; padding: 22px 18px; border-right: 1px solid var(--ink); }
-    .pipe-step:last-child { border-right: 0; background: var(--cyan); }
-    .pipe-step b { display: block; margin-bottom: 10px; }
-    .pipe-step p { margin: 0; font-size: .86rem; line-height: 1.48; }
-    .pipe-step .when { display: block; margin-bottom: 24px; color: var(--cyan-dark); font-size: .78rem; font-weight: 800; }
-    .stop { margin-top: 24px; padding: 24px; border: 2px solid var(--red); background: #fff0ed; }
-    .stop strong { color: #a72c21; }
-    .commands { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; }
-    .commands ol { margin: 0; padding-left: 24px; }
-    .commands li { margin-bottom: 18px; padding-left: 8px; line-height: 1.55; }
-    .repo-map { border: 2px solid var(--ink); background: var(--white); }
-    .repo-row { display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px; padding: 15px 18px; border-bottom: 1px solid var(--line); }
-    .repo-row:last-child { border-bottom: 0; }
-    .repo-row code { font-weight: 750; }
-    .glossary { display: grid; grid-template-columns: repeat(2, 1fr); border: 2px solid var(--ink); background: var(--white); }
-    .term { padding: 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .term:nth-child(2n) { border-right: 0; }
-    .term:nth-last-child(-n+2) { border-bottom: 0; }
-    .term b { display: block; margin-bottom: 8px; }
-    .term p { margin: 0; line-height: 1.55; }
-    .results { display: grid; grid-template-columns: repeat(5, 1fr); border: 2px solid var(--ink); background: var(--white); }
-    .result { min-height: 138px; padding: 22px; border-right: 1px solid var(--ink); }
-    .result:last-child { border-right: 0; background: var(--cyan); }
-    .result b { display: block; margin-bottom: 9px; font-size: 2.4rem; letter-spacing: -.06em; }
-    .result span { font-size: .83rem; font-weight: 750; }
-    footer { padding: 34px 0 50px; font-size: .85rem; color: var(--muted); }
-    :focus-visible { outline: 4px solid var(--red); outline-offset: 4px; }
-    @media (max-width: 900px) {
-      .progress { display: none; }
-      .hero { grid-template-columns: 1fr; }
-      .hero-copy { padding: 70px 24px; border-right: 0; border-bottom: 2px solid var(--ink); }
-      .hero-map { padding: 35px 24px; }
-      .section-head, .definition, .eval-focus, .commands { grid-template-columns: 1fr; }
-      .definition > div:first-child { border-right: 0; border-bottom: 2px solid var(--ink); }
-      .request-flow, .pipeline, .results { grid-template-columns: 1fr; }
-      .request-flow article, .pipe-step, .result { min-height: auto; border-right: 0; border-bottom: 1px solid var(--ink); }
-      .request-flow article::after { display: none !important; }
-      .check { grid-template-columns: 1fr; }
-      .check-name, .check > div:not(.check-name) { border-right: 0; border-bottom: 1px solid var(--line); }
-    }
-    @media (max-width: 560px) {
-      section { padding: 60px 0; }
-      .glossary { grid-template-columns: 1fr; }
-      .term, .term:nth-child(2n), .term:nth-last-child(-n+2) { border-right: 0; border-bottom: 1px solid var(--line); }
-      .term:last-child { border-bottom: 0; }
-      .repo-row { grid-template-columns: 1fr; }
-    }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--paper)}
+    a{color:inherit} code,pre{font-family:var(--mono)} .shell{width:min(1160px,calc(100% - 36px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:20;border-bottom:2px solid var(--ink);background:rgba(245,241,232,.96);backdrop-filter:blur(10px)}
+    .topbar .shell{display:flex;align-items:center;justify-content:space-between;min-height:64px;gap:24px}
+    .brand{font-weight:900;letter-spacing:-.03em}.nav{display:flex;gap:18px;font-size:.8rem;font-weight:800}.nav a{text-decoration:none}.nav a:hover{text-decoration:underline;text-underline-offset:5px}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;min-height:680px;border-bottom:2px solid var(--ink);background:var(--white)}
+    .hero-copy{display:flex;flex-direction:column;justify-content:center;padding:72px 7vw 72px max(18px,calc((100vw - 1160px)/2));border-right:2px solid var(--ink)}
+    .label{margin:0 0 20px;color:#176577;font-weight:850}.hero h1{max-width:9ch;margin:0;font-size:clamp(4rem,8.4vw,8rem);line-height:.88;letter-spacing:-.075em}
+    .hero-copy>p:last-child{max-width:53ch;margin:30px 0 0;font-size:1.25rem;line-height:1.55}
+    .hero-diagram{position:relative;display:flex;align-items:center;justify-content:center;padding:48px;background:var(--blue-soft);overflow:hidden}
+    .loop{position:relative;width:min(410px,100%);aspect-ratio:1;border:3px solid var(--ink);border-radius:50%}
+    .loop-center{position:absolute;inset:28%;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--yellow);font-size:1.3rem;font-weight:900;text-align:center}
+    .loop-node{position:absolute;width:108px;padding:12px 8px;border:2px solid var(--ink);background:var(--white);font-size:.82rem;font-weight:850;text-align:center;box-shadow:5px 5px 0 var(--ink)}
+    .loop-node:nth-child(2){top:-22px;left:calc(50% - 54px)}.loop-node:nth-child(3){right:-30px;top:calc(50% - 30px)}.loop-node:nth-child(4){bottom:-22px;left:calc(50% - 54px)}.loop-node:nth-child(5){left:-30px;top:calc(50% - 30px)}
+    .dot{position:absolute;top:calc(50% - 9px);left:calc(50% - 9px);width:18px;height:18px;border:3px solid var(--ink);border-radius:50%;background:var(--orange);animation:orbit 8s linear infinite}
+    @keyframes orbit{from{transform:rotate(0deg) translateX(202px) rotate(0deg)}to{transform:rotate(360deg) translateX(202px) rotate(-360deg)}}
+    main{overflow:hidden} section{padding:88px 0;border-bottom:2px solid var(--ink)}
+    .section-head{display:grid;grid-template-columns:.72fr 1.28fr;gap:64px;margin-bottom:42px}.section-head h2{margin:0;max-width:15ch;font-size:clamp(2.35rem,5vw,4.5rem);line-height:.98;letter-spacing:-.055em}.lead{max-width:65ch;margin:0;font-size:1.12rem;line-height:1.7}
+    .idea{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--ink);background:var(--white)}.idea article{padding:30px;border-right:1px solid var(--ink)}.idea article:last-child{border:0;background:var(--yellow)}.idea b{display:block;margin-bottom:15px;font-size:1.3rem}.idea p{margin:0;line-height:1.6}
+    .equation{margin-top:24px;padding:24px;border:2px solid var(--ink);background:var(--navy);color:white;text-align:center;font:800 clamp(1rem,3vw,1.55rem)/1.4 var(--mono)}
+    .signal{position:relative;display:grid;grid-template-columns:repeat(5,1fr);border:2px solid var(--ink);background:var(--white)}.signal article{position:relative;min-height:180px;padding:25px 18px;border-right:1px solid var(--line)}.signal article:last-child{border:0;background:var(--blue-soft)}
+    .signal small{display:block;margin-bottom:26px;color:#176577;font-weight:850}.signal b{display:block;margin-bottom:10px}.signal p{margin:0;font-size:.9rem;line-height:1.55}.signal-line{position:absolute;left:8%;right:8%;top:54px;height:4px;background:var(--ink)}.packet{position:absolute;z-index:2;top:44px;left:8%;width:24px;height:24px;border:3px solid var(--ink);border-radius:50%;background:var(--orange);animation:travel 6s ease-in-out infinite}
+    @keyframes travel{0%,8%{left:8%}22%{left:28%}42%{left:48%}62%{left:68%}82%,100%{left:88%}}
+    .scope-ladder{display:grid;gap:10px}.scope-row{display:grid;grid-template-columns:160px 1fr 1fr 120px;align-items:center;min-height:84px;border:2px solid var(--ink);background:var(--white)}.scope-row>*{padding:18px}.scope-row strong{font-size:1.2rem}.scope-row .speed{height:100%;display:grid;place-items:center;border-left:1px solid var(--line);background:var(--blue-soft);font-weight:850;text-align:center}.scope-row code{color:#176577;font-weight:800}
+    .decision{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch}.decision-box{padding:26px;border:2px solid var(--ink);background:var(--white)}.decision-box b{display:block;margin-bottom:10px}.decision-box p{margin:0;line-height:1.55}.decision-arrow{display:grid;place-items:center;width:54px;font-size:2rem;font-weight:900}
+    .details{display:grid;gap:18px}.detail{display:grid;grid-template-columns:200px 1fr;border:2px solid var(--ink);background:var(--white)}.detail-title{padding:28px;border-right:2px solid var(--ink);background:var(--blue-soft)}.detail-title b{display:block;font-size:1.45rem}.detail-title span{display:inline-block;margin-top:12px;padding:5px 9px;border:1px solid var(--ink);background:var(--yellow);font-size:.75rem;font-weight:850}.detail-body{display:grid;grid-template-columns:repeat(3,1fr)}.detail-body>div{padding:26px;border-right:1px solid var(--line)}.detail-body>div:last-child{border:0}.detail h3{margin:0 0 9px;font-size:1rem}.detail p{margin:0;line-height:1.55}.mini{margin-top:13px;padding:12px;background:#eef7f7;font:700 .82rem/1.5 var(--mono)}
+    .compare{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--ink);background:var(--white)}.compare>div{padding:32px}.compare>div:first-child{border-right:2px solid var(--ink)}.compare h3{margin:0 0 14px;font-size:1.45rem}.compare p{line-height:1.6}.sample{padding:18px;background:var(--ink);color:#edf7f7;font:.84rem/1.6 var(--mono);white-space:pre-wrap}
+    .score-visual{display:grid;grid-template-columns:4fr 3fr 3fr;margin-top:20px;border:2px solid var(--ink)}.score-visual span{padding:14px 8px;border-right:1px solid var(--ink);font-size:.8rem;font-weight:850;text-align:center}.score-visual span:nth-child(1){background:var(--blue)}.score-visual span:nth-child(2){background:var(--yellow)}.score-visual span:nth-child(3){border:0;background:var(--green);color:white}
+    .architecture{display:grid;grid-template-columns:1fr 50px 1fr 50px 1fr 50px 1fr;align-items:stretch}.arch{padding:28px 20px;border:2px solid var(--ink);background:var(--white)}.arch:nth-of-type(3){background:var(--blue-soft)}.arch:nth-of-type(4){background:var(--yellow)}.arch b{display:block;margin-bottom:12px;font-size:1.15rem}.arch p{margin:0;font-size:.9rem;line-height:1.55}.arrow{display:grid;place-items:center;font-size:1.7rem;font-weight:900}
+    .adapter-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:28px}.adapter{border:2px solid var(--ink);background:var(--white)}.adapter h3{margin:0;padding:20px 24px;border-bottom:2px solid var(--ink);background:var(--blue-soft)}.adapter ol{margin:0;padding:24px 24px 24px 48px}.adapter li{margin:0 0 14px;line-height:1.5}.adapter li:last-child{margin:0}
+    .criterion{display:grid;grid-template-columns:1.2fr .9fr .6fr .6fr;border-bottom:1px solid var(--line)}.criterion>*{padding:13px}.criterion:first-child{font-weight:850;background:var(--blue-soft)}.criterion:last-child{border:0}.pass{color:#137047;font-weight:900}.code-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}.code-pair h3{margin:0 0 12px}.code{overflow:auto;margin:0;padding:20px;border:2px solid var(--ink);background:var(--ink);color:#eaf5f4;font:.8rem/1.55 var(--mono);white-space:pre}
+    .pipeline{position:relative;display:grid;grid-template-columns:repeat(6,1fr);border:2px solid var(--ink);background:var(--white)}.pipe{min-height:180px;padding:24px 18px;border-right:1px solid var(--ink)}.pipe:last-child{border:0;background:var(--green);color:white}.pipe span{display:block;margin-bottom:25px;color:#176577;font-size:.76rem;font-weight:900}.pipe:last-child span{color:white}.pipe b{display:block;margin-bottom:9px}.pipe p{margin:0;font-size:.85rem;line-height:1.5}.gate{margin-top:24px;padding:24px;border:2px solid var(--red);background:#fff0ec}.gate strong{color:#a53028}
+    .failure-map{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--ink);background:var(--white)}.failure-map article{padding:24px;border-right:1px solid var(--line)}.failure-map article:last-child{border:0}.failure-map b{display:block;margin-bottom:12px}.failure-map p{margin:0;line-height:1.55}.failure-map .x{display:grid;place-items:center;width:30px;height:30px;margin-bottom:18px;border:2px solid var(--ink);border-radius:50%;background:#ffd9d4;color:var(--red);font-weight:900}
+    .run-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:26px}.commands{margin:0;padding:26px 26px 26px 50px;border:2px solid var(--ink);background:var(--white)}.commands li{margin-bottom:18px;line-height:1.5}.file-map{border:2px solid var(--ink);background:var(--white)}.file{display:grid;grid-template-columns:1.15fr 1.5fr;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}.file:last-child{border:0}.file code{color:#176577;font-weight:800}.video-frame{padding:10px;border:2px solid var(--ink);background:var(--ink);box-shadow:12px 12px 0 var(--yellow)}video{display:block;width:100%;aspect-ratio:16/9;background:#07121d}.note{margin-top:24px;padding:20px 24px;border-left:8px solid var(--orange);background:var(--white);line-height:1.6}
+    .results{display:grid;grid-template-columns:repeat(5,1fr);border:2px solid var(--ink);background:var(--white)}.result{padding:24px;border-right:1px solid var(--ink)}.result:last-child{border:0;background:var(--green);color:white}.result b{display:block;margin-bottom:8px;font-size:2.25rem}.result span{font-size:.82rem;font-weight:800}
+    footer{padding:38px 0 50px;color:var(--muted);font-size:.86rem}:focus-visible{outline:4px solid var(--orange);outline-offset:4px}
+    @media(max-width:930px){.nav{display:none}.hero,.section-head,.compare,.adapter-grid,.code-pair,.run-grid{grid-template-columns:1fr}.hero-copy{padding:70px 24px;border-right:0;border-bottom:2px solid var(--ink)}.hero-diagram{min-height:540px}.idea,.signal,.pipeline,.results,.failure-map{grid-template-columns:1fr}.idea article,.signal article,.pipe,.result,.failure-map article{min-height:auto;border-right:0;border-bottom:1px solid var(--ink)}.scope-row{grid-template-columns:1fr}.scope-row .speed{border-left:0;border-top:1px solid var(--line)}.detail{grid-template-columns:1fr}.detail-title{border-right:0;border-bottom:2px solid var(--ink)}.detail-body{grid-template-columns:1fr}.detail-body>div{border-right:0;border-bottom:1px solid var(--line)}.architecture{grid-template-columns:1fr}.arrow{height:42px;transform:rotate(90deg)}.decision{grid-template-columns:1fr}.decision-arrow{height:50px;width:auto;transform:rotate(90deg)}.signal-line,.packet{display:none}}
+    @media(max-width:620px){section{padding:64px 0}.section-head{gap:24px}.hero h1{font-size:3.8rem}.loop{width:270px}.loop-node{width:86px;font-size:.72rem}.loop-node:nth-child(2),.loop-node:nth-child(4){left:calc(50% - 43px)}.dot{display:none}.detail-body{grid-template-columns:1fr}.criterion{grid-template-columns:1fr 1fr}.criterion>*:first-child{grid-column:1/-1}.file{grid-template-columns:1fr}.hero-diagram{padding:35px;min-height:430px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.dot,.packet{animation:none}}
   </style>
 </head>
 <body>
-  <nav class="topbar" aria-label="Lesson sections">
-    <div class="shell"><div class="brand">Testing and Evals: Beginner Guide</div><div class="progress"><a href="#meaning">Meaning</a><a href="#types">Five checks</a><a href="#evals">Evals</a><a href="#cicd">CI/CD</a><a href="#run">Run it</a></div></div>
-  </nav>
+  <nav class="topbar" aria-label="Guide sections"><div class="shell"><div class="brand">Testing and Evals</div><div class="nav"><a href="#basics">Start</a><a href="#types">Test types</a><a href="#eval">Evals</a><a href="#framework">Framework</a><a href="#cicd">CI/CD</a><a href="#run">Run it</a></div></div></nav>
   <header class="hero">
-    <div class="hero-copy">
-      <p class="kicker">Start here. No test knowledge is required.</p>
-      <h1>How do we know software works?</h1>
-      <p>We define the expected result. We run the software. We compare the actual result with the expected result. Different checks observe different parts of the system.</p>
-    </div>
-    <div class="hero-map" aria-label="Lesson path">
-      <div class="map-step"><b>1</b><span>Learn what correctness means.</span></div>
-      <div class="map-step"><b>2</b><span>Follow one request through the system.</span></div>
-      <div class="map-step"><b>3</b><span>Compare five check types.</span></div>
-      <div class="map-step"><b>4</b><span>Place each check in CI/CD.</span></div>
-      <div class="map-step"><b>5</b><span>Run the working example.</span></div>
-    </div>
+    <div class="hero-copy"><p class="label">A visual guide for a first-time learner</p><h1>How do you know an app works?</h1><p>You state what must happen. You run the app. You collect evidence. You compare the evidence with your rule. This guide shows each part with one working task app.</p></div>
+    <div class="hero-diagram" aria-label="The correctness loop"><div class="loop"><div class="loop-center">Correct<br>enough?</div><div class="loop-node">1. Define rule</div><div class="loop-node">2. Run app</div><div class="loop-node">3. Collect evidence</div><div class="loop-node">4. Compare</div><div class="dot"></div></div></div>
   </header>
   <main>
-    <section id="meaning"><div class="shell">
-      <div class="section-head"><h2>Correctness starts with an expected result</h2><p class="lead">A check cannot decide what your product should do. You define that rule. The check then reports whether the software follows the rule.</p></div>
-      <div class="definition">
-        <div><h3>A deterministic test</h3><p>The result must match an exact value. Example: an empty task title must return HTTP status 400.</p></div>
-        <div><h3>An eval</h3><p>The result receives a score. Example: an AI answer receives points for accuracy, safety, and format.</p></div>
-      </div>
-      <div class="plain-example"><strong>Simple rule:</strong> Given the title “Ship release”, the backend must create one task with that exact title. The word <em>must</em> makes the expected result clear.</div>
+    <section id="basics"><div class="shell">
+      <div class="section-head"><h2>Start with one clear rule</h2><p class="lead">A tool cannot decide what your product should do. You write the expected result first. The tool only compares the actual result with that expected result.</p></div>
+      <div class="idea"><article><b>Given</b><p>A user enters the title <code>Publish guide</code> and selects high priority.</p></article><article><b>When</b><p>The user selects <strong>Add task</strong>.</p></article><article><b>Then</b><p>The page shows one high-priority task with the same title.</p></article></div>
+      <div class="equation">INPUT + ACTION + EXPECTED RESULT = ONE CHECKABLE RULE</div>
+      <div class="note"><strong>Correctness is limited.</strong> One passing check proves one rule for the inputs that the check used. It does not prove every possible behavior.</div>
     </div></section>
-    <section id="video"><div class="shell">
-      <div class="section-head"><h2>Watch the complete example</h2><p class="lead">The video explains each check in plain language. It also shows the real browser, UI, API request, backend rule, eval score, and CI/CD gate.</p></div>
-      <div class="video-frame"><video controls playsinline preload="metadata" poster="data:image/png;base64,__POSTER_BASE64__"><source src="data:video/mp4;base64,__VIDEO_BASE64__" type="video/mp4">Your browser cannot play this video.</video></div>
-      <p class="video-note">The video includes narration and matching captions. Pause on any caption if you need more time.</p>
+
+    <section id="path"><div class="shell">
+      <div class="section-head"><h2>Watch one action cross the system</h2><p class="lead">The moving dot represents one request. A small test observes one box. An end-to-end test observes the complete path.</p></div>
+      <div class="signal"><div class="signal-line"></div><div class="packet"></div><article><small>1. Browser</small><b>User action</b><p>The user enters a title and selects Add task.</p></article><article><small>2. UI code</small><b>Request</b><p>The browser sends JSON to <code>POST /api/tasks</code>.</p></article><article><small>3. Backend</small><b>Rule</b><p>The server checks the title and priority.</p></article><article><small>4. Store</small><b>State</b><p>The store creates a task with an ID.</p></article><article><small>5. Browser</small><b>Visible result</b><p>The UI shows the saved task and new count.</p></article></div>
     </div></section>
-    <section id="request"><div class="shell">
-      <div class="section-head"><h2>Follow one task through the system</h2><p class="lead">A user creates a task. The request crosses five boundaries. A test can observe one boundary or the complete path.</p></div>
-      <div class="request-flow">
-        <article><small>Step 1</small><b>User action</b><p>The user enters a title and selects Add task.</p></article>
-        <article><small>Step 2</small><b>UI code</b><p>The browser sends JSON to <code>POST /api/tasks</code>.</p></article>
-        <article><small>Step 3</small><b>Backend route</b><p>The server checks the request and creates a task.</p></article>
-        <article><small>Step 4</small><b>Data store</b><p>The store saves the task state.</p></article>
-        <article><small>Step 5</small><b>Visible result</b><p>The UI displays the new task.</p></article>
-      </div>
-    </div></section>
+
     <section id="types"><div class="shell">
-      <div class="section-head"><h2>Five checks answer five questions</h2><p class="lead">Use the smallest check that can prove the rule. Use larger checks for connections and user workflows.</p></div>
-      <div class="checks">
-        <article class="check"><div class="check-name"><strong>Unit test</strong><span>Very fast</span></div><div><h3>Question</h3><p>Does one small function follow its rule?</p><p class="plain-example"><code>validateTitle("")</code> must return an error.</p></div><div><h3>It finds</h3><p>Incorrect calculations, validation, and state rules. It does not prove that the API or UI works.</p></div></article>
-        <article class="check"><div class="check-name"><strong>Integration test</strong><span>Fast</span></div><div><h3>Question</h3><p>Do connected parts work together?</p><p class="plain-example"><code>POST /api/tasks</code> must save a task and return status 201.</p></div><div><h3>It finds</h3><p>Broken routes, incorrect JSON, and store connection errors. It does not prove the browser workflow.</p></div></article>
-        <article class="check"><div class="check-name"><strong>E2E test</strong><span>Slower</span></div><div><h3>Question</h3><p>Can a user complete the full workflow?</p><p class="plain-example">A browser enters a title, selects Add task, and sees the task.</p></div><div><h3>It finds</h3><p>Broken buttons, browser errors, API errors, and incorrect visible results.</p></div></article>
-        <article class="check"><div class="check-name"><strong>Eval</strong><span>Scored</span></div><div><h3>Question</h3><p>How well does variable behavior meet quality criteria?</p><p class="plain-example">Four cases receive weighted scores. The total must be at least 0.90.</p></div><div><h3>It finds</h3><p>Quality regressions when one exact answer is not required. Evals are common for AI output.</p></div></article>
-        <article class="check"><div class="check-name"><strong>Smoke test</strong><span>After deploy</span></div><div><h3>Question</h3><p>Did the deployed application start and answer basic requests?</p><p class="plain-example"><code>GET /health</code> must return status 200.</p></div><div><h3>It finds</h3><p>Failed starts, unavailable pages, and broken deployment configuration. It is not a complete test.</p></div></article>
+      <div class="section-head"><h2>Choose the smallest useful check</h2><p class="lead">Small checks run quickly and locate faults well. Large checks prove connections and user workflows. A useful project needs both types.</p></div>
+      <div class="scope-ladder">
+        <div class="scope-row"><strong>Unit test</strong><div>Checks one function or rule.</div><div><code>validateTask(input)</code></div><div class="speed">Fastest</div></div>
+        <div class="scope-row"><strong>Integration test</strong><div>Checks connected code parts.</div><div><code>API + store</code></div><div class="speed">Fast</div></div>
+        <div class="scope-row"><strong>E2E test</strong><div>Checks a real user workflow.</div><div><code>browser + API + store</code></div><div class="speed">Slower</div></div>
+        <div class="scope-row"><strong>Eval</strong><div>Scores quality across many criteria.</div><div><code>cases + graders + gate</code></div><div class="speed">Variable</div></div>
+        <div class="scope-row"><strong>Smoke test</strong><div>Checks that a deployed app starts.</div><div><code>page + /health</code></div><div class="speed">After deploy</div></div>
+      </div>
+      <div class="decision"><div class="decision-box"><b>Is one function enough?</b><p>Use a unit test.</p></div><div class="decision-arrow">›</div><div class="decision-box"><b>Must parts connect?</b><p>Use an integration test.</p></div><div class="decision-arrow">›</div><div class="decision-box"><b>Must a user finish a flow?</b><p>Use an E2E test.</p></div></div>
+    </div></section>
+
+    <section id="details"><div class="shell">
+      <div class="section-head"><h2>What each check proves</h2><p class="lead">Each check answers a different question. The “does not prove” column prevents false confidence.</p></div>
+      <div class="details">
+        <article class="detail"><div class="detail-title"><b>Unit test</b><span>One code unit</span></div><div class="detail-body"><div><h3>Question</h3><p>Does this function follow its rule?</p><div class="mini">validateTask({ title: "x" })</div></div><div><h3>Finds</h3><p>Calculation, validation, formatting, and state-rule faults.</p></div><div><h3>Does not prove</h3><p>The route, database, browser, or deployment works.</p></div></div></article>
+        <article class="detail"><div class="detail-title"><b>Integration test</b><span>Connected parts</span></div><div class="detail-body"><div><h3>Question</h3><p>Do the API and store exchange correct data?</p><div class="mini">POST /api/tasks → 201</div></div><div><h3>Finds</h3><p>Broken routes, invalid JSON, and store contract faults.</p></div><div><h3>Does not prove</h3><p>A browser can use the complete workflow.</p></div></div></article>
+        <article class="detail"><div class="detail-title"><b>E2E test</b><span>Full workflow</span></div><div class="detail-body"><div><h3>Question</h3><p>Can a user create and complete a task?</p><div class="mini">fill → click → see result</div></div><div><h3>Finds</h3><p>Broken controls, requests, routes, and visible state.</p></div><div><h3>Does not prove</h3><p>Every edge case or internal rule works.</p></div></div></article>
+        <article class="detail"><div class="detail-title"><b>Eval</b><span>Quality score</span></div><div class="detail-body"><div><h3>Question</h3><p>How well does behavior meet several criteria?</p><div class="mini">earned weight / available weight</div></div><div><h3>Finds</h3><p>Quality loss across a dataset, workflow, or model output.</p></div><div><h3>Does not prove</h3><p>Quality outside the cases and criteria.</p></div></div></article>
+        <article class="detail"><div class="detail-title"><b>Smoke test</b><span>Live deployment</span></div><div class="detail-body"><div><h3>Question</h3><p>Did the deployed service start and answer?</p><div class="mini">GET /health → 200</div></div><div><h3>Finds</h3><p>Failed starts, missing pages, and broken configuration.</p></div><div><h3>Does not prove</h3><p>Detailed behavior or complete user workflows.</p></div></div></article>
       </div>
     </div></section>
-    <section id="evals"><div class="shell">
-      <div class="section-head"><h2>Why an eval is different</h2><p class="lead">A normal test often has one exact answer. An eval can accept multiple good answers and measure their quality.</p></div>
-      <div class="eval-focus">
-        <div class="eval-panel"><h3>Exact test</h3><p>The result is pass or fail. This works well for API status codes, totals, IDs, and validation rules.</p><pre class="code-block">expected status: 201
+
+    <section id="eval"><div class="shell">
+      <div class="section-head"><h2>A test decides. An eval measures.</h2><p class="lead">Use an exact test when one result is correct. Use an eval when several results can be acceptable or when quality has several parts.</p></div>
+      <div class="compare"><div><h3>Exact test</h3><p>The test compares one actual value with one expected value. The result is pass or fail.</p><div class="sample">expected status: 201
 actual status:   201
-result: PASS</pre></div>
-        <div class="eval-panel"><h3>Scored eval</h3><p>Each criterion adds points. A quality gate decides the minimum acceptable score.</p><pre class="code-block">valid title:    0.40
-right priority: 0.30
-safe output:    0.30
-total score:    1.00</pre><div class="score-bar" aria-label="Required eval score is 90 percent"><span>Required: 0.90</span><span></span></div></div>
-      </div>
-      <div class="plain-example"><strong>Important:</strong> A high eval score proves only the criteria in the dataset. Add real failure cases, edge cases, and safety cases.</div>
+result:          PASS</div></div><div><h3>Weighted eval</h3><p>Graders score separate criteria. Important criteria can receive more weight.</p><div class="sample">visible title:  2 / 2
+correct count:  2 / 2
+right priority: 1 / 1
+score:          5 / 5 = 1.00</div><div class="score-visual"><span>Title 40%</span><span>Count 30%</span><span>Priority 30%</span></div></div></div>
+      <div class="note"><strong>Example:</strong> An AI summary can use different words and remain correct. Grade facts, safety, format, and completeness. Do not require one exact sentence.</div>
     </div></section>
+
+    <section id="framework"><div class="shell">
+      <div class="section-head"><h2>The reusable eval framework</h2><p class="lead">The project now uses one runner for UI and backend evals. Each layer has one job. You can add another product by adding an adapter and JSON suite.</p></div>
+      <div class="architecture"><div class="arch"><b>1. Suite</b><p>JSON defines cases, steps, criteria, weights, and thresholds.</p></div><div class="arrow">›</div><div class="arch"><b>2. Adapter</b><p>An HTTP adapter runs backend steps. A browser adapter runs UI steps.</p></div><div class="arrow">›</div><div class="arch"><b>3. Grader</b><p>Shared graders compare nested values with equals, includes, matches, or truthy rules.</p></div><div class="arrow">›</div><div class="arch"><b>4. Report</b><p>The runner writes scores, failures, evidence, and the final gate result.</p></div></div>
+      <div class="adapter-grid"><article class="adapter"><h3>Backend eval path</h3><ol><li>Start the real Node server.</li><li>Send an HTTP request.</li><li>Capture status and response body.</li><li>Grade each configured response path.</li><li>Add weights and apply the suite threshold.</li></ol></article><article class="adapter"><h3>UI eval path</h3><ol><li>Open a real Chromium page.</li><li>Fill controls and select buttons.</li><li>Capture visible text, counts, or classes.</li><li>Grade each configured capture.</li><li>Add weights and apply the suite threshold.</li></ol></article></div>
+      <div class="compare" style="margin-top:28px"><div><h3>One UI case</h3><div class="criterion"><span>Criterion</span><span>Evidence</span><span>Weight</span><span>Result</span></div><div class="criterion"><span>Title is visible</span><span>Task list text</span><span>2</span><span class="pass">PASS</span></div><div class="criterion"><span>Count changes</span><span>1 open / 0 done</span><span>2</span><span class="pass">PASS</span></div><div class="criterion"><span>Priority is visible</span><span>high</span><span>1</span><span class="pass">PASS</span></div></div><div><h3>One backend case</h3><div class="criterion"><span>Criterion</span><span>Evidence</span><span>Weight</span><span>Result</span></div><div class="criterion"><span>Status is 201</span><span>HTTP status</span><span>2</span><span class="pass">PASS</span></div><div class="criterion"><span>Title is trimmed</span><span>JSON body</span><span>2</span><span class="pass">PASS</span></div><div class="criterion"><span>Priority is kept</span><span>JSON body</span><span>1</span><span class="pass">PASS</span></div></div></div>
+      <div class="code-pair"><div><h3>Suite data</h3><pre class="code">{
+  "id": "create-visible-task",
+  "steps": [
+    { "action": "fill",
+      "label": "Task title",
+      "value": "Publish guide" },
+    { "action": "click",
+      "role": "button",
+      "name": "Add task" }
+  ],
+  "criteria": [{
+    "path": "captures.tasks",
+    "weight": 2,
+    "grader": {
+      "type": "includes",
+      "expected": "Publish guide"
+    }
+  }]
+}</pre></div><div><h3>Report data</h3><pre class="code">{
+  "score": 1,
+  "threshold": 0.9,
+  "passed": true,
+  "totals": {
+    "suites": 2,
+    "cases": 6,
+    "criteria": 13,
+    "earned": 21,
+    "available": 21
+  },
+  "suites": [
+    { "id": "backend", "passed": true },
+    { "id": "ui", "passed": true }
+  ]
+}</pre></div></div>
+    </div></section>
+
     <section id="cicd"><div class="shell">
-      <div class="section-head"><h2>Where checks run in CI/CD</h2><p class="lead">CI checks each change. CD deploys an approved change. A failed required check stops the pipeline.</p></div>
-      <div class="pipeline">
-        <div class="pipe-step"><span class="when">Developer</span><b>Push code</b><p>A pull request starts the CI workflow.</p></div>
-        <div class="pipe-step"><span class="when">CI</span><b>Unit</b><p>Check small rules first. Stop quickly if one fails.</p></div>
-        <div class="pipe-step"><span class="when">CI</span><b>Integration</b><p>Check the backend and store connection.</p></div>
-        <div class="pipe-step"><span class="when">CI</span><b>Eval and E2E</b><p>Check quality scores and user workflows.</p></div>
-        <div class="pipe-step"><span class="when">CD</span><b>Deploy</b><p>Release only after required checks pass.</p></div>
-        <div class="pipe-step"><span class="when">CD</span><b>Smoke</b><p>Check the running deployment immediately.</p></div>
-      </div>
-      <div class="stop"><strong>Gate rule:</strong> If a required test fails or the eval score is below 0.90, CI returns a failure. The merge or deployment must stop.</div>
+      <div class="section-head"><h2>CI checks before CD deploys</h2><p class="lead">Continuous Integration runs checks for each code change. Continuous Delivery deploys only an approved change. A required failure stops the path.</p></div>
+      <div class="pipeline"><div class="pipe"><span>Developer</span><b>Push</b><p>A pull request starts the workflow.</p></div><div class="pipe"><span>CI</span><b>Unit</b><p>Check small rules first.</p></div><div class="pipe"><span>CI</span><b>Integration</b><p>Check API connections.</p></div><div class="pipe"><span>CI</span><b>UI and backend evals</b><p>Apply the 0.90 quality gate.</p></div><div class="pipe"><span>CI</span><b>E2E</b><p>Check the main browser flow.</p></div><div class="pipe"><span>CD</span><b>Deploy and smoke</b><p>Release, then check the live service.</p></div></div>
+      <div class="gate"><strong>Stop rule:</strong> CI fails if a required test fails, an adapter cannot run, or a suite score is below 0.90. The deployment does not start.</div>
     </div></section>
+
+    <section id="failures"><div class="shell">
+      <div class="section-head"><h2>Read a failure by its layer</h2><p class="lead">The failed layer narrows the cause. Start with the smallest failed check. Then inspect the evidence that the check captured.</p></div>
+      <div class="failure-map"><article><div class="x">×</div><b>Unit fails</b><p>The rule or function is probably incorrect.</p></article><article><div class="x">×</div><b>Integration fails</b><p>The contract between parts is probably incorrect.</p></article><article><div class="x">×</div><b>UI eval fails</b><p>The browser did not show the required result.</p></article><article><div class="x">×</div><b>Smoke fails</b><p>The deployment or live configuration is probably incorrect.</p></article></div>
+    </div></section>
+
+    <section id="video"><div class="shell">
+      <div class="section-head"><h2>Watch the working app</h2><p class="lead">This 47-second video shows the real browser and backend flow. Use it after the diagrams so each action has a clear meaning.</p></div>
+      <div class="video-frame"><video controls playsinline preload="metadata" poster="data:image/png;base64,__POSTER_BASE64__"><source src="data:video/mp4;base64,__VIDEO_BASE64__" type="video/mp4">Your browser cannot play this video.</video></div>
+    </div></section>
+
     <section id="run"><div class="shell">
-      <div class="section-head"><h2>Run the working project</h2><p class="lead">The project uses Node.js and Playwright. It contains a real UI, backend, store, test set, eval dataset, video, and CI workflow.</p></div>
-      <div class="commands">
-        <div><ol><li>Run <code>npm install</code> once.</li><li>Run <code>npm start</code> to start the app.</li><li>Open <code>http://127.0.0.1:4173</code>.</li><li>Run <code>npm run check</code> for the automated checks.</li><li>Run <code>npm run test:smoke</code> while the app runs.</li></ol></div>
-        <div class="repo-map">
-          <div class="repo-row"><code>src/domain.mjs</code><span>Small business rules for unit tests.</span></div>
-          <div class="repo-row"><code>src/server.mjs</code><span>Backend routes for integration tests.</span></div>
-          <div class="repo-row"><code>public/</code><span>The browser UI for E2E tests.</span></div>
-          <div class="repo-row"><code>tests/</code><span>Unit, integration, E2E, and smoke checks.</span></div>
-          <div class="repo-row"><code>evals/</code><span>The eval cases, weights, grader, and gate.</span></div>
-          <div class="repo-row"><code>.github/workflows/ci.yml</code><span>The CI order and artifact upload.</span></div>
-        </div>
-      </div>
+      <div class="section-head"><h2>Run and extend the project</h2><p class="lead">The repository contains the task app, test sets, eval engine, UI suite, backend suite, CI workflow, report output, and this guide.</p></div>
+      <div class="run-grid"><ol class="commands"><li>Run <code>npm install</code>.</li><li>Run <code>npx playwright install chromium</code>.</li><li>Run <code>npm start</code>.</li><li>Open <code>http://127.0.0.1:4173</code>.</li><li>Run <code>npm run check</code>.</li><li>Read <code>reports/evals/report.json</code>.</li></ol><div class="file-map"><div class="file"><code>evals/framework/core.mjs</code><span>Grades criteria and builds reports.</span></div><div class="file"><code>evals/framework/http-adapter.mjs</code><span>Runs backend HTTP steps.</span></div><div class="file"><code>evals/framework/browser-adapter.mjs</code><span>Runs UI steps in Chromium.</span></div><div class="file"><code>evals/suites/backend.json</code><span>Defines backend cases and criteria.</span></div><div class="file"><code>evals/suites/ui.json</code><span>Defines browser cases and criteria.</span></div><div class="file"><code>evals/run.mjs</code><span>Runs all suites and applies the gate.</span></div><div class="file"><code>.github/workflows/ci.yml</code><span>Runs the quality gates for each change.</span></div></div></div>
     </div></section>
-    <section id="glossary"><div class="shell">
-      <div class="section-head"><h2>Small glossary</h2><p class="lead">These words appear in test tools and CI reports.</p></div>
-      <div class="glossary"><div class="term"><b>Assertion</b><p>A comparison between the actual result and the expected result.</p></div><div class="term"><b>Test case</b><p>One input, one action, and one expected result.</p></div><div class="term"><b>Fixture</b><p>Known data or setup that a check uses.</p></div><div class="term"><b>Quality gate</b><p>A rule that stops CI/CD when a required result fails.</p></div></div>
-    </div></section>
+
     <section id="results"><div class="shell">
-      <div class="section-head"><h2>Verified result</h2><p class="lead">These results came from the working project, not from sample text.</p></div>
-      <div class="results"><div class="result"><b>3</b><span>unit tests pass</span></div><div class="result"><b>2</b><span>integration tests pass</span></div><div class="result"><b>2</b><span>browser E2E tests pass</span></div><div class="result"><b>1.00</b><span>eval score, gate 0.90</span></div><div class="result"><b>PASS</b><span>smoke check</span></div></div>
+      <div class="section-head"><h2>What the project checks</h2><p class="lead">The final numbers below come from runnable code. The framework report gives the detailed evidence for every criterion.</p></div>
+      <div class="results"><div class="result"><b>6</b><span>unit tests, including framework tests</span></div><div class="result"><b>2</b><span>integration tests</span></div><div class="result"><b>2</b><span>browser E2E tests</span></div><div class="result"><b>2</b><span>eval suites for UI and backend</span></div><div class="result"><b>0.90</b><span>required eval score</span></div></div>
     </div></section>
   </main>
-  <footer><div class="shell">Built as a beginner reference. The embedded video uses the real UI and backend.</div></footer>
+  <footer><div class="shell">Begin with a clear rule. Select the smallest check that can prove it. Add a larger check for the important user path.</div></footer>
 </body>
 </html>

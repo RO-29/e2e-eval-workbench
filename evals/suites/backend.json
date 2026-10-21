@@ -1,0 +1,38 @@
+{
+  "id": "backend",
+  "name": "Backend behavior",
+  "threshold": 0.9,
+  "cases": [
+    {
+      "id": "health",
+      "name": "Health route reports ready",
+      "steps": [{ "key": "health", "method": "GET", "path": "/health" }],
+      "criteria": [
+        { "id": "status", "description": "The route returns HTTP 200.", "path": "responses.health.status", "weight": 2, "grader": { "type": "equals", "expected": 200 } },
+        { "id": "body", "description": "The response reports ok.", "path": "responses.health.body.status", "weight": 1, "grader": { "type": "equals", "expected": "ok" } }
+      ]
+    },
+    {
+      "id": "create",
+      "name": "Valid task is created",
+      "steps": [
+        { "key": "reset", "method": "POST", "path": "/api/reset" },
+        { "key": "create", "method": "POST", "path": "/api/tasks", "body": { "title": "  Publish guide  ", "priority": "high" } }
+      ],
+      "criteria": [
+        { "id": "status", "description": "The API returns HTTP 201.", "path": "responses.create.status", "weight": 2, "grader": { "type": "equals", "expected": 201 } },
+        { "id": "title", "description": "The API trims the title.", "path": "responses.create.body.task.title", "weight": 2, "grader": { "type": "equals", "expected": "Publish guide" } },
+        { "id": "priority", "description": "The API keeps the priority.", "path": "responses.create.body.task.priority", "weight": 1, "grader": { "type": "equals", "expected": "high" } }
+      ]
+    },
+    {
+      "id": "reject",
+      "name": "Invalid task is rejected",
+      "steps": [{ "key": "create", "method": "POST", "path": "/api/tasks", "body": { "title": "x" } }],
+      "criteria": [
+        { "id": "status", "description": "The API returns HTTP 400.", "path": "responses.create.status", "weight": 2, "grader": { "type": "equals", "expected": 400 } },
+        { "id": "message", "description": "The error explains the title rule.", "path": "responses.create.body.error", "weight": 1, "grader": { "type": "includes", "expected": "at least 3" } }
+      ]
+    }
+  ]
+}

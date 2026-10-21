@@ -1,25 +1,25 @@
-import { readFile } from 'node:fs/promises';
-import { validateTask } from '../src/domain.mjs';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { chromium } from '@playwright/test';
+import { createAppServer } from '../src/server.mjs';
+import { createBrowserAdapter } from './framework/browser-adapter.mjs';
+import { createReport, runSuite } from './framework/core.mjs';
+import { createHttpAdapter } from './framework/http-adapter.mjs';
 
-const cases = JSON.parse(await readFile(new URL('./cases.json', import.meta.url), 'utf8'));
-let earned = 0;
-let available = 0;
-const results = [];
+const loadSuite = async (name) => JSON.parse(await readFile(new URL(`./suites/${name}.json`, import.meta.url), 'utf8'));
+const server = createAppServer();
+await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+const baseUrl = `http://127.0.0.1:${server.address().port}`;
+const browser = await chromium.launch({ headless: true });
 
-for (const item of cases) {
-  const actual = validateTask(item.input);
-  const expected = item.expected;
-  const acceptedMatches = actual.ok === expected.accepted;
-  const outputMatches = actual.ok
-    ? actual.value.title === expected.title && actual.value.priority === expected.priority
-    : actual.error.includes(expected.errorIncludes);
-  const passed = acceptedMatches && outputMatches;
-  available += item.weight;
-  if (passed) earned += item.weight;
-  results.push({ name: item.name, passed, weight: item.weight });
+try {
+  const backend = await runSuite(await loadSuite('backend'), createHttpAdapter(baseUrl));
+  const ui = await runSuite(await loadSuite('ui'), createBrowserAdapter(browser, baseUrl));
+  const report = createReport([backend, ui], 0.9);
+  await mkdir(new URL('../reports/evals/', import.meta.url), { recursive: true });
+  await writeFile(new URL('../reports/evals/report.json', import.meta.url), JSON.stringify(report, null, 2));
+  console.log(JSON.stringify(report, null, 2));
+  if (!report.passed) process.exitCode = 1;
+} finally {
+  await browser.close();
+  await new Promise((resolve) => server.close(resolve));
 }
-
-const score = earned / available;
-const report = { score, threshold: 0.9, passed: score >= 0.9, results };
-console.log(JSON.stringify(report, null, 2));
-if (!report.passed) process.exitCode = 1;
