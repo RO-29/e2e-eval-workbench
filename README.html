@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E2E and Eval Workbench</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%230f172a%22/%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22-apple-system%2CSegoe%20UI%2Csans-serif%22%20font-size%3D%2217%22%20font-weight%3D%22800%22%20fill%3D%22white%22%3ED%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --accent: #0f172a;
+  --accent-soft: #0f172a14;
+  --accent-bd: #0f172a33;
+  --fg: #18181b;
+  --fg-dim: #525252;
+  --bg: #fafaf9;
+  --bg-card: #ffffff;
+  --bd: #e7e5e4;
+  --bd-strong: #d6d3d1;
+  --code-bg: #f4f4f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e7e5e4;
+    --fg-dim: #a8a29e;
+    --bg: #0c0a09;
+    --bg-card: #1c1917;
+    --bd: #292524;
+    --bd-strong: #44403c;
+    --code-bg: #1c1917;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font: 15.5px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0;
+  color: var(--fg); background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HERO */
+.hero {
+  background:
+    radial-gradient(ellipse at top right, rgba(255,255,255,.18), transparent 55%),
+    linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent), black 25%) 100%);
+  color: white;
+  padding: 3rem 1.5rem 2.4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute; right: -60px; top: -60px;
+  width: 280px; height: 280px;
+  background: rgba(255,255,255,.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-inner { max-width: 1040px; margin: 0 auto; position: relative; }
+.hero .pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .28rem .8rem;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+.hero h1 {
+  font-size: 2.35em; margin: 1rem 0 .55rem; line-height: 1.12;
+  font-weight: 800; letter-spacing: -0.025em;
+  color: white; border: none; padding: 0;
+}
+.hero h1::before { display: none; }
+.hero .subtitle {
+  font-size: 1.05em; opacity: .9; margin: 0; max-width: 760px;
+  line-height: 1.5;
+}
+.hero .meta {
+  margin-top: 1.4rem;
+  font-size: 13px; opacity: .78;
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+}
+.hero .meta span { display: inline-flex; align-items: center; gap: .35rem; }
+
+/* DOCNAV (sticky) */
+.docnav {
+  background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+  border-bottom: 1px solid var(--bd);
+  padding: .55rem 1.5rem;
+  font-size: 13.5px;
+  position: sticky; top: 0; z-index: 20;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.docnav-inner { max-width: 1040px; margin: 0 auto; display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
+.docnav a {
+  color: var(--fg-dim); text-decoration: none;
+  padding: .35rem .75rem; border-radius: 6px;
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+.docnav a:hover { color: var(--accent); background: var(--accent-soft); }
+.docnav a.current { color: var(--accent); background: var(--accent-soft); font-weight: 600; box-shadow: inset 0 0 0 1px var(--accent-bd); }
+
+/* MAIN */
+main { max-width: 1040px; margin: 0 auto; padding: 2.4rem 1.5rem 5rem; }
+
+/* TOC */
+.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--bd);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+}
+.toc-title { font-weight: 700; color: var(--accent); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .55rem; }
+.toc ul { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: 2rem; }
+.toc li { margin: .18rem 0; break-inside: avoid; }
+.toc li.h3 { padding-left: 1.2rem; font-size: 13.5px; color: var(--fg-dim); }
+.toc a { color: var(--fg-dim); text-decoration: none; }
+.toc a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 700px) { .toc ul { columns: 1; } }
+
+/* HEADINGS */
+h1, h2, h3, h4 { line-height: 1.25; scroll-margin-top: 5rem; }
+h1 { font-size: 1.95em; margin: 2.2em 0 .7em; padding-bottom: .35em; border-bottom: 2px solid var(--bd-strong); font-weight: 800; letter-spacing: -0.02em; }
+h2 {
+  font-size: 1.5em; margin: 2.4em 0 .6em; padding: 0 0 .25em .1em;
+  border-bottom: 1px solid var(--bd);
+  font-weight: 700; letter-spacing: -0.015em;
+  position: relative;
+}
+h2::before {
+  content: ""; position: absolute; left: -.9rem; top: .3em;
+  width: 4px; height: .85em; background: var(--accent); border-radius: 2px;
+}
+h3 { font-size: 1.2em; margin: 1.6em 0 .5em; font-weight: 700;
+     color: color-mix(in srgb, var(--fg), var(--accent) 22%); }
+h4 { font-size: 1.04em; margin: 1.3em 0 .35em; font-weight: 700; }
+h2 a, h3 a { color: inherit; }
+
+/* PROSE */
+p { margin: .7em 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+strong { color: color-mix(in srgb, var(--fg), var(--accent) 12%); }
+
+/* CODE */
+code {
+  font: 13px/1.45 ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  background: var(--code-bg); padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--bd);
+  color: color-mix(in srgb, var(--fg), var(--accent) 22%);
+  word-break: break-word;
+}
+pre {
+  background: var(--code-bg); padding: 1rem 1.2rem; border-radius: 10px;
+  overflow-x: auto; border: 1px solid var(--bd);
+  margin: 1em 0; font-size: 13px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+pre code { background: transparent; padding: 0; border: 0; color: var(--fg); }
+
+/* TABLES */
+table {
+  border-collapse: separate; border-spacing: 0;
+  margin: 1.3em 0; width: 100%; font-size: 13.8px;
+  background: var(--bg-card);
+  border: 1px solid var(--bd); border-radius: 10px;
+  overflow: hidden;
+}
+th, td { border-bottom: 1px solid var(--bd); padding: 9px 14px; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); color: color-mix(in srgb, var(--fg), var(--accent) 35%);
+     font-weight: 700; font-size: 12.8px; letter-spacing: .02em;
+     border-bottom: 1px solid var(--accent-bd); }
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: color-mix(in srgb, var(--bg-card) 97%, var(--accent) 3%); }
+tr:hover td { background: var(--accent-soft); }
+td code { font-size: 12.4px; }
+
+/* CALLOUTS */
+blockquote {
+  border-left: 4px solid var(--accent); margin: 1.2em 0;
+  padding: .65em 1.2em; background: var(--accent-soft);
+  color: var(--fg); border-radius: 0 8px 8px 0;
+}
+
+hr { border: 0; border-top: 1px solid var(--bd); margin: 2.5em 0; }
+
+ul, ol { padding-left: 1.4em; }
+li { margin: .25em 0; }
+li > p { margin: .3em 0; }
+
+/* MERMAID */
+.mermaid {
+  background: var(--bg-card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 1.4rem 1rem;
+  margin: 1.6em 0;
+  text-align: center;
+  overflow-x: auto;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+footer {
+  max-width: 1040px; margin: 3rem auto 2rem;
+  padding: 1.4rem 1.5rem; border-top: 1px solid var(--bd);
+  color: var(--fg-dim); font-size: 13px;
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between;
+}
+footer a { color: var(--accent); }
+
+/* mobile */
+@media (max-width: 720px) {
+  .hero { padding: 2.2rem 1.2rem 2rem; }
+  .hero h1 { font-size: 1.8em; }
+  main { padding: 1.8rem 1.1rem 4rem; }
+  h2::before { display: none; }
+  th, td { padding: 7px 10px; font-size: 13px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<header class="hero"><div class="hero-inner">
+  <span class="pill">Doc</span>
+  <h1>E2E and Eval Workbench</h1>
+  <p class="subtitle">| Item | Value |</p>
+  <div class="meta"><span>Audit 2026-06-09</span><span>GHL data infrastructure</span></div>
+</div></header>
+<div class="docnav"><div class="docnav-inner"><a href="DB_AUDIT.html" class="">Overview</a><a href="MASTER_INVENTORY.html" class="">Inventory</a><a href="MVP_AU_LAUNCH.html" class="">MVP</a><a href="SCHEMA_MANAGEMENT.html" class="">Schemas</a><a href="DATA_RESIDENCY_STRATEGY.html" class="">Residency</a><a href="terraform-modules.html" class="">Terraform</a><a href="application-db-references.html" class="">Apps</a><a href="infra-and-helm-db-references.html" class="">Infra</a></div></div>
+<main>
+<div class="toc"><div class="toc-title">On this page</div><ul><li class="h2"><a href="#1-what-you-will-run">1. What you will run</a></li><li class="h2"><a href="#2-requirements">2. Requirements</a></li><li class="h2"><a href="#3-install-the-project">3. Install the project</a></li><li class="h2"><a href="#4-start-the-sample-application">4. Start the sample application</a></li><li class="h2"><a href="#5-run-all-checks">5. Run all checks</a></li><li class="h2"><a href="#6-run-one-check-type">6. Run one check type</a></li><li class="h2"><a href="#7-read-the-unit-and-integration-result">7. Read the unit and integration result</a></li><li class="h2"><a href="#8-run-and-read-the-eval-result">8. Run and read the eval result</a></li><li class="h2"><a href="#9-read-one-eval-case">9. Read one eval case</a></li><li class="h2"><a href="#10-read-the-e2e-result">10. Read the E2E result</a></li><li class="h2"><a href="#11-run-and-read-the-smoke-test">11. Run and read the smoke test</a></li><li class="h2"><a href="#12-eval-framework-structure">12. Eval framework structure</a></li><li class="h2"><a href="#13-available-graders">13. Available graders</a></li><li class="h2"><a href="#14-add-a-backend-eval-case">14. Add a backend eval case</a></li><li class="h2"><a href="#15-add-a-ui-eval-case">15. Add a UI eval case</a></li><li class="h2"><a href="#16-use-the-framework-in-another-project">16. Use the framework in another project</a></li><li class="h2"><a href="#17-generated-files">17. Generated files</a></li><li class="h2"><a href="#18-ci-and-deployment-gate">18. CI and deployment gate</a></li><li class="h2"><a href="#19-common-problems">19. Common problems</a></li><li class="h3"><a href="#chromium-is-missing">Chromium is missing</a></li><li class="h3"><a href="#port-4173-is-already-in-use">Port 4173 is already in use</a></li><li class="h3"><a href="#an-eval-score-is-below-090">An eval score is below 0.90</a></li><li class="h3"><a href="#a-browser-case-has-an-execution-error">A browser case has an execution error</a></li><li class="h3"><a href="#a-smoke-test-cannot-connect">A smoke test cannot connect</a></li><li class="h2"><a href="#20-project-map">20. Project map</a></li><li class="h2"><a href="#21-links">21. Links</a></li></ul></div>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose</td>
+<td>Learn tests and evals with one small task application</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>Node.js 22</td>
+</tr>
+<tr>
+<td>UI runner</td>
+<td>Playwright with Chromium</td>
+</tr>
+<tr>
+<td>Eval gate</td>
+<td><code>0.90</code></td>
+</tr>
+<tr>
+<td>Live guide</td>
+<td><a href="https://e2e-eval-workbench.pages.dev/">https://e2e-eval-workbench.pages.dev/</a></td>
+</tr>
+<tr>
+<td>License</td>
+<td>No license file</td>
+</tr>
+</tbody>
+</table>
+<p>This project shows how to check a UI and a backend.</p>
+<p>It includes unit tests, integration tests, browser tests, smoke tests, and weighted evals. The eval framework uses JSON files, so you can replace the task application with your product.</p>
+<h2 id="1-what-you-will-run">1. What you will run</h2>
+<p>The sample product is a task application. A user can create a task, select a priority, and complete the task.</p>
+<p>The project checks the product at five levels:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it runs</th>
+<th>What it proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit test</td>
+<td>One JavaScript function</td>
+<td>A small rule returns the exact result</td>
+</tr>
+<tr>
+<td>Integration test</td>
+<td>HTTP API and in-memory store</td>
+<td>The backend parts exchange valid data</td>
+</tr>
+<tr>
+<td>E2E test</td>
+<td>Chromium, UI, API, and store</td>
+<td>A user can finish the main workflow</td>
+</tr>
+<tr>
+<td>Eval</td>
+<td>UI or backend adapter, cases, and graders</td>
+<td>Product behavior reaches a score threshold</td>
+</tr>
+<tr>
+<td>Smoke test</td>
+<td>A running URL</td>
+<td>The main page and health route respond</td>
+</tr>
+</tbody>
+</table>
+<p>No single check proves that the complete product is correct. Each check detects a different type of problem.</p>
+<h2 id="2-requirements">2. Requirements</h2>
+<p>Install these tools before you start:</p>
+<ul>
+<li>Node.js 22</li>
+<li>npm</li>
+<li>Git</li>
+</ul>
+<p>Check the versions:</p>
+<pre class="codehilite"><code class="language-bash">node --version
+npm --version
+git --version
+</code></pre>
+
+<p>The Node.js result must start with <code>v22</code>.</p>
+<h2 id="3-install-the-project">3. Install the project</h2>
+<p>Clone the repository:</p>
+<pre class="codehilite"><code class="language-bash">git clone git@github.com:RO-29/e2e-eval-workbench.git
+cd e2e-eval-workbench
+</code></pre>
+
+<p>Install the JavaScript packages:</p>
+<pre class="codehilite"><code class="language-bash">npm install
+</code></pre>
+
+<p>Install Chromium for Playwright:</p>
+<pre class="codehilite"><code class="language-bash">npx playwright install chromium
+</code></pre>
+
+<p>You only need to install the packages and Chromium once.</p>
+<h2 id="4-start-the-sample-application">4. Start the sample application</h2>
+<p>Start the server:</p>
+<pre class="codehilite"><code class="language-bash">npm start
+</code></pre>
+
+<p>The server prints this result:</p>
+<pre class="codehilite"><code class="language-text">Task Lab is ready at http://127.0.0.1:4173
+</code></pre>
+
+<p>Open <a href="http://127.0.0.1:4173">http://127.0.0.1:4173</a> in a browser.</p>
+<p>Keep this terminal open while you use the application. Press <code>Control+C</code> to stop the server.</p>
+<p>The automated eval and E2E commands start their own server. You do not need to start the server before those commands.</p>
+<h2 id="5-run-all-checks">5. Run all checks</h2>
+<p>Run the complete local quality gate:</p>
+<pre class="codehilite"><code class="language-bash">npm run check
+</code></pre>
+
+<p>This command runs these checks in order:</p>
+<ol>
+<li>Unit and integration tests.</li>
+<li>Backend and UI evals.</li>
+<li>Browser E2E tests.</li>
+<li>The self-contained HTML guide build.</li>
+</ol>
+<p>The command stops when a required check fails. A successful run exits with status code <code>0</code>.</p>
+<h2 id="6-run-one-check-type">6. Run one check type</h2>
+<p>Use these commands when you want a smaller result:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>npm run test:unit</code></td>
+<td>Runs the domain and eval-framework unit tests</td>
+</tr>
+<tr>
+<td><code>npm run test:integration</code></td>
+<td>Runs the real HTTP API integration tests</td>
+</tr>
+<tr>
+<td><code>npm run test</code></td>
+<td>Runs all unit and integration tests</td>
+</tr>
+<tr>
+<td><code>npm run eval</code></td>
+<td>Runs the backend and UI eval suites</td>
+</tr>
+<tr>
+<td><code>npm run test:e2e</code></td>
+<td>Runs the browser workflow tests</td>
+</tr>
+<tr>
+<td><code>npm run build:artifact</code></td>
+<td>Builds the self-contained learning guide</td>
+</tr>
+<tr>
+<td><code>npm run video</code></td>
+<td>Records the sample browser demonstration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-read-the-unit-and-integration-result">7. Read the unit and integration result</h2>
+<p>Run:</p>
+<pre class="codehilite"><code class="language-bash">npm run test
+</code></pre>
+
+<p>A successful result ends with values similar to these values:</p>
+<pre class="codehilite"><code class="language-text">tests 8
+pass 8
+fail 0
+skipped 0
+</code></pre>
+
+<p>Read the values as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tests</code></td>
+<td>Total number of test cases</td>
+</tr>
+<tr>
+<td><code>pass</code></td>
+<td>Test cases that produced the expected result</td>
+</tr>
+<tr>
+<td><code>fail</code></td>
+<td>Test cases that produced a wrong result or an error</td>
+</tr>
+<tr>
+<td><code>skipped</code></td>
+<td>Test cases that did not run</td>
+</tr>
+</tbody>
+</table>
+<p>The check passes only when <code>fail</code> is <code>0</code>. Review skipped tests because they provide no evidence.</p>
+<p>A failed test shows the test name, the actual value, and the expected value. Start with the first failed test because later failures can have the same cause.</p>
+<h2 id="8-run-and-read-the-eval-result">8. Run and read the eval result</h2>
+<p>Run both eval suites:</p>
+<pre class="codehilite"><code class="language-bash">npm run eval
+</code></pre>
+
+<p>The runner does this work:</p>
+<ol>
+<li>It starts the real task server on an available local port.</li>
+<li>It starts headless Chromium.</li>
+<li>It runs the backend suite through HTTP requests.</li>
+<li>It runs the UI suite through browser actions.</li>
+<li>It grades all captured evidence.</li>
+<li>It writes <code>reports/evals/report.json</code>.</li>
+<li>It closes the browser and server.</li>
+</ol>
+<p>A successful report starts with data similar to this example:</p>
+<pre class="codehilite"><code class="language-json">{
+  &quot;score&quot;: 1,
+  &quot;threshold&quot;: 0.9,
+  &quot;passed&quot;: true,
+  &quot;totals&quot;: {
+    &quot;suites&quot;: 2,
+    &quot;cases&quot;: 6,
+    &quot;criteria&quot;: 13,
+    &quot;earned&quot;: 21,
+    &quot;available&quot;: 21
+  }
+}
+</code></pre>
+
+<p>Read the top-level fields as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>score</code></td>
+<td>Total earned weight divided by total available weight</td>
+</tr>
+<tr>
+<td><code>threshold</code></td>
+<td>Minimum required score for the complete eval run</td>
+</tr>
+<tr>
+<td><code>passed</code></td>
+<td>Final gate result</td>
+</tr>
+<tr>
+<td><code>totals.suites</code></td>
+<td>Number of UI and backend suites</td>
+</tr>
+<tr>
+<td><code>totals.cases</code></td>
+<td>Number of scenarios</td>
+</tr>
+<tr>
+<td><code>totals.criteria</code></td>
+<td>Number of individual behavior rules</td>
+</tr>
+<tr>
+<td><code>totals.earned</code></td>
+<td>Weight from criteria that passed</td>
+</tr>
+<tr>
+<td><code>totals.available</code></td>
+<td>Weight from all criteria</td>
+</tr>
+</tbody>
+</table>
+<p>The score formula is:</p>
+<pre class="codehilite"><code class="language-text">score = earned weight / available weight
+</code></pre>
+
+<p>The current successful result is:</p>
+<pre class="codehilite"><code class="language-text">21 / 21 = 1.00
+</code></pre>
+
+<p>The required score is:</p>
+<pre class="codehilite"><code class="language-text">0.90
+</code></pre>
+
+<p>The complete eval gate passes only when both conditions are true:</p>
+<ul>
+<li>The total score is at least <code>0.90</code>.</li>
+<li>Every required suite reaches its own threshold and has no execution error.</li>
+</ul>
+<h2 id="9-read-one-eval-case">9. Read one eval case</h2>
+<p>Each suite contains cases. Each case contains criteria.</p>
+<p>This result shows one criterion:</p>
+<pre class="codehilite"><code class="language-json">{
+  &quot;id&quot;: &quot;status&quot;,
+  &quot;description&quot;: &quot;The API returns HTTP 201.&quot;,
+  &quot;path&quot;: &quot;responses.create.status&quot;,
+  &quot;actual&quot;: 201,
+  &quot;expected&quot;: 201,
+  &quot;weight&quot;: 2,
+  &quot;earned&quot;: 2,
+  &quot;passed&quot;: true
+}
+</code></pre>
+
+<p>Read it in this order:</p>
+<ol>
+<li><code>description</code> states the required behavior.</li>
+<li><code>path</code> identifies the captured evidence.</li>
+<li><code>actual</code> shows what the product did.</li>
+<li><code>expected</code> shows the rule.</li>
+<li><code>weight</code> shows the importance of the rule.</li>
+<li><code>earned</code> is the weight received by the rule.</li>
+<li><code>passed</code> is the rule result.</li>
+</ol>
+<p>If the criterion fails, <code>earned</code> is <code>0</code>. Compare <code>actual</code> with <code>expected</code> to find the behavior difference.</p>
+<p>If <code>executionError</code> has a value, the adapter could not complete the case. Check the server, selector, URL, and browser action before you change a grader.</p>
+<h2 id="10-read-the-e2e-result">10. Read the E2E result</h2>
+<p>Run:</p>
+<pre class="codehilite"><code class="language-bash">npm run test:e2e
+</code></pre>
+
+<p>A successful result ends with this type of line:</p>
+<pre class="codehilite"><code class="language-text">2 passed (1.1s)
+</code></pre>
+
+<p>Playwright writes its HTML report to:</p>
+<pre class="codehilite"><code class="language-text">reports/playwright/index.html
+</code></pre>
+
+<p>Open the report after a failure:</p>
+<pre class="codehilite"><code class="language-bash">npx playwright show-report reports/playwright
+</code></pre>
+
+<p>The configuration keeps a trace, screenshot, and video for failed browser tests. Use the trace first. It shows browser actions, page state, requests, console messages, and errors.</p>
+<h2 id="11-run-and-read-the-smoke-test">11. Run and read the smoke test</h2>
+<p>Start the application in the first terminal:</p>
+<pre class="codehilite"><code class="language-bash">npm start
+</code></pre>
+
+<p>Run the smoke test in a second terminal:</p>
+<pre class="codehilite"><code class="language-bash">BASE_URL=http://127.0.0.1:4173 npm run test:smoke
+</code></pre>
+
+<p>A successful result is:</p>
+<pre class="codehilite"><code class="language-text">Smoke checks passed.
+</code></pre>
+
+<p>You can check a deployed site by changing <code>BASE_URL</code>:</p>
+<pre class="codehilite"><code class="language-bash">BASE_URL=https://your-site.example.com npm run test:smoke
+</code></pre>
+
+<p>The smoke test checks the <code>/health</code> route, the home-page response, and the page title.</p>
+<h2 id="12-eval-framework-structure">12. Eval framework structure</h2>
+<p>The framework has four layers:</p>
+<pre class="codehilite"><code class="language-text">JSON suite -&gt; adapter -&gt; grader -&gt; report
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Suite</td>
+<td><code>evals/suites/backend.json</code></td>
+<td>Defines backend steps and criteria</td>
+</tr>
+<tr>
+<td>Suite</td>
+<td><code>evals/suites/ui.json</code></td>
+<td>Defines browser steps and criteria</td>
+</tr>
+<tr>
+<td>HTTP adapter</td>
+<td><code>evals/framework/http-adapter.mjs</code></td>
+<td>Runs HTTP requests and captures responses</td>
+</tr>
+<tr>
+<td>Browser adapter</td>
+<td><code>evals/framework/browser-adapter.mjs</code></td>
+<td>Runs browser actions and captures UI evidence</td>
+</tr>
+<tr>
+<td>Core grader</td>
+<td><code>evals/framework/core.mjs</code></td>
+<td>Grades criteria and calculates scores</td>
+</tr>
+<tr>
+<td>Runner</td>
+<td><code>evals/run.mjs</code></td>
+<td>Starts dependencies and creates the final report</td>
+</tr>
+</tbody>
+</table>
+<p>The adapter collects evidence. The grader compares that evidence with a rule. The report records each decision.</p>
+<h2 id="13-available-graders">13. Available graders</h2>
+<p>Use one grader for each criterion:</p>
+<table>
+<thead>
+<tr>
+<th>Grader</th>
+<th>Use</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>equals</code></td>
+<td>The actual value must equal the expected value</td>
+<td>HTTP status equals <code>201</code></td>
+</tr>
+<tr>
+<td><code>includes</code></td>
+<td>Text must contain the expected text</td>
+<td>Error includes <code>at least 3</code></td>
+</tr>
+<tr>
+<td><code>matches</code></td>
+<td>Text must match a regular expression</td>
+<td>Identifier matches a format</td>
+</tr>
+<tr>
+<td><code>truthy</code></td>
+<td>The value must exist or equal true</td>
+<td>Response contains a created object</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>path</code> field uses dot notation. For example, <code>responses.create.status</code> reads <code>status</code> from the captured <code>create</code> response.</p>
+<h2 id="14-add-a-backend-eval-case">14. Add a backend eval case</h2>
+<p>Open <code>evals/suites/backend.json</code>.</p>
+<p>Add one case to the <code>cases</code> array:</p>
+<pre class="codehilite"><code class="language-json">{
+  &quot;id&quot;: &quot;list-tasks&quot;,
+  &quot;name&quot;: &quot;Task list is available&quot;,
+  &quot;steps&quot;: [
+    {
+      &quot;key&quot;: &quot;list&quot;,
+      &quot;method&quot;: &quot;GET&quot;,
+      &quot;path&quot;: &quot;/api/tasks&quot;
+    }
+  ],
+  &quot;criteria&quot;: [
+    {
+      &quot;id&quot;: &quot;status&quot;,
+      &quot;description&quot;: &quot;The API returns HTTP 200.&quot;,
+      &quot;path&quot;: &quot;responses.list.status&quot;,
+      &quot;weight&quot;: 2,
+      &quot;grader&quot;: {
+        &quot;type&quot;: &quot;equals&quot;,
+        &quot;expected&quot;: 200
+      }
+    }
+  ]
+}
+</code></pre>
+
+<p>Run the suite:</p>
+<pre class="codehilite"><code class="language-bash">npm run eval
+</code></pre>
+
+<p>Find <code>list-tasks</code> in <code>reports/evals/report.json</code>. Check its score and criteria.</p>
+<h2 id="15-add-a-ui-eval-case">15. Add a UI eval case</h2>
+<p>Open <code>evals/suites/ui.json</code>.</p>
+<p>UI cases use these actions:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>goto</code></td>
+<td>Open a path</td>
+</tr>
+<tr>
+<td><code>fill</code></td>
+<td>Enter text in a labeled field</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>Select an option</td>
+</tr>
+<tr>
+<td><code>click</code></td>
+<td>Click a button or element</td>
+</tr>
+<tr>
+<td><code>waitForText</code></td>
+<td>Wait for an asynchronous UI update</td>
+</tr>
+<tr>
+<td><code>captureText</code></td>
+<td>Save visible text as evidence</td>
+</tr>
+<tr>
+<td><code>captureCount</code></td>
+<td>Save the number of matching elements</td>
+</tr>
+<tr>
+<td><code>captureClass</code></td>
+<td>Save an element class</td>
+</tr>
+</tbody>
+</table>
+<p>This example checks that the user can create a task:</p>
+<pre class="codehilite"><code class="language-json">{
+  &quot;id&quot;: &quot;create-task&quot;,
+  &quot;name&quot;: &quot;User creates a task&quot;,
+  &quot;steps&quot;: [
+    {
+      &quot;action&quot;: &quot;goto&quot;,
+      &quot;path&quot;: &quot;/&quot;
+    },
+    {
+      &quot;action&quot;: &quot;fill&quot;,
+      &quot;label&quot;: &quot;Task title&quot;,
+      &quot;value&quot;: &quot;Publish guide&quot;
+    },
+    {
+      &quot;action&quot;: &quot;click&quot;,
+      &quot;role&quot;: &quot;button&quot;,
+      &quot;name&quot;: &quot;Add task&quot;
+    },
+    {
+      &quot;action&quot;: &quot;waitForText&quot;,
+      &quot;selector&quot;: &quot;#task-list&quot;,
+      &quot;value&quot;: &quot;Publish guide&quot;
+    },
+    {
+      &quot;action&quot;: &quot;captureText&quot;,
+      &quot;key&quot;: &quot;tasks&quot;,
+      &quot;selector&quot;: &quot;#task-list&quot;
+    }
+  ],
+  &quot;criteria&quot;: [
+    {
+      &quot;id&quot;: &quot;title&quot;,
+      &quot;description&quot;: &quot;The new task is visible.&quot;,
+      &quot;path&quot;: &quot;captures.tasks&quot;,
+      &quot;weight&quot;: 2,
+      &quot;grader&quot;: {
+        &quot;type&quot;: &quot;includes&quot;,
+        &quot;expected&quot;: &quot;Publish guide&quot;
+      }
+    }
+  ]
+}
+</code></pre>
+
+<p>Use <code>waitForText</code> before a capture when a click starts an asynchronous request.</p>
+<h2 id="16-use-the-framework-in-another-project">16. Use the framework in another project</h2>
+<ol>
+<li>Copy <code>evals/framework</code> into the target project.</li>
+<li>Create one or more suite JSON files.</li>
+<li>Keep product actions inside an adapter.</li>
+<li>Keep behavior rules inside suite criteria.</li>
+<li>Call <code>runSuite</code> for each suite.</li>
+<li>Call <code>createReport</code> with the total threshold.</li>
+<li>Return a nonzero exit status when <code>report.passed</code> is false.</li>
+</ol>
+<p>Do not put product-specific selectors or URLs in the core grader. This separation lets one grader support different products.</p>
+<h2 id="17-generated-files">17. Generated files</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reports/evals/report.json</code></td>
+<td>Full eval result for machines and humans</td>
+</tr>
+<tr>
+<td><code>reports/playwright/index.html</code></td>
+<td>Browser test report</td>
+</tr>
+<tr>
+<td><code>artifact/e2e-eval-workbench.html</code></td>
+<td>Self-contained learning guide</td>
+</tr>
+<tr>
+<td><code>dist/index.html</code></td>
+<td>Cloudflare Pages deployment file</td>
+</tr>
+<tr>
+<td><code>video/task-lab-demo.mp4</code></td>
+<td>Recorded browser demonstration</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>reports</code> directory is generated. Git does not track it.</p>
+<h2 id="18-ci-and-deployment-gate">18. CI and deployment gate</h2>
+<p>GitHub Actions runs <code>.github/workflows/ci.yml</code> for pull requests and pushes to <code>main</code>.</p>
+<p>CI performs these actions:</p>
+<ol>
+<li>It installs Node.js 22 dependencies.</li>
+<li>It installs Chromium.</li>
+<li>It runs unit and integration tests.</li>
+<li>It runs UI and backend evals.</li>
+<li>It runs browser E2E tests.</li>
+<li>It uploads the Playwright and eval reports.</li>
+</ol>
+<p>A failed command stops the job. A deployment should start only after this job passes.</p>
+<h2 id="19-common-problems">19. Common problems</h2>
+<h3 id="chromium-is-missing">Chromium is missing</h3>
+<p>Result:</p>
+<pre class="codehilite"><code class="language-text">Executable does not exist
+</code></pre>
+
+<p>Fix:</p>
+<pre class="codehilite"><code class="language-bash">npx playwright install chromium
+</code></pre>
+
+<h3 id="port-4173-is-already-in-use">Port 4173 is already in use</h3>
+<p>Stop the other local server. Then run <code>npm start</code> again.</p>
+<p>The eval runner does not use port <code>4173</code>. It selects an available port.</p>
+<h3 id="an-eval-score-is-below-090">An eval score is below 0.90</h3>
+<p>Open <code>reports/evals/report.json</code>.</p>
+<p>Find a suite with <code>"passed": false</code>. Then find a case with a low score. Compare each failed criterion's <code>actual</code> and <code>expected</code> values.</p>
+<h3 id="a-browser-case-has-an-execution-error">A browser case has an execution error</h3>
+<p>Check these values:</p>
+<ul>
+<li>The selector exists.</li>
+<li>The accessible label or role matches the UI.</li>
+<li>The expected text appears after the action.</li>
+<li>The backend request finishes.</li>
+</ul>
+<h3 id="a-smoke-test-cannot-connect">A smoke test cannot connect</h3>
+<p>Check that the server is running. Check that <code>BASE_URL</code> has the correct protocol, host, and port.</p>
+<h2 id="20-project-map">20. Project map</h2>
+<pre class="codehilite"><code class="language-text">e2e-eval-workbench/
+├── src/                         Sample UI and backend
+├── tests/
+│   ├── unit/                    Function and grader tests
+│   ├── integration/             API and store tests
+│   ├── e2e/                     Browser workflow tests
+│   └── smoke/                   Deployed-service checks
+├── evals/
+│   ├── framework/               Core grader and adapters
+│   ├── suites/                  UI and backend datasets
+│   └── run.mjs                  Eval runner
+├── reports/                     Generated results
+├── artifact/                    Guide source and built HTML
+├── video/                       Browser demonstration
+├── dist/                        Cloudflare Pages output
+└── .github/workflows/ci.yml     CI quality gate
+</code></pre>
+
+<h2 id="21-links">21. Links</h2>
+<ul>
+<li>Live visual guide: <a href="https://e2e-eval-workbench.pages.dev/">https://e2e-eval-workbench.pages.dev/</a></li>
+<li>GitHub repository: <a href="https://github.com/RO-29/e2e-eval-workbench">https://github.com/RO-29/e2e-eval-workbench</a></li>
+</ul>
+</main>
+<footer>
+  <div>GHL data-infrastructure audit · 2026-06-09</div>
+  <div><a href="DB_AUDIT.html">Overview</a> · <a href="MASTER_INVENTORY.html">Inventory</a></div>
+</footer>
+<script>
+  const mqd = window.matchMedia('(prefers-color-scheme: dark)');
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: mqd.matches ? 'dark' : 'default',
+    flowchart: { curve: 'basis', padding: 14, useMaxWidth: true },
+    sequence:  { useMaxWidth: true },
+    gantt:     { useMaxWidth: true },
+    themeVariables: { fontFamily: '-apple-system,Segoe UI,sans-serif', primaryColor: '#0f172a' }
+  });
+</script>
+</body>
+</html>
