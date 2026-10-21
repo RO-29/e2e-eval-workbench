@@ -389,6 +389,159 @@
         color: var(--ink);
       }
 
+      .eval-demo {
+        margin-top: 34px;
+        overflow: hidden;
+        background: #edf3f7;
+        border: 2px solid var(--ink);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .demo-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px 22px;
+        background: var(--ink);
+        color: var(--white);
+      }
+
+      .demo-toolbar p { margin: 3px 0 0; color: #bcccdc; font-size: 0.9rem; }
+      .demo-toolbar strong { color: var(--yellow); }
+      .demo-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+      .demo-action {
+        min-height: 44px;
+        padding: 10px 15px;
+        border: 2px solid var(--white);
+        border-radius: 7px;
+        background: transparent;
+        color: var(--white);
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.85rem;
+        font-weight: 800;
+      }
+
+      .demo-action.primary { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
+
+      .framework-strip {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        padding: 16px 22px;
+        background: #d9e6ef;
+        border-bottom: 1px solid #9fb3c8;
+      }
+
+      .framework-step {
+        position: relative;
+        padding: 0 8px 0 23px;
+        color: var(--muted);
+        font-size: 0.76rem;
+        font-weight: 800;
+      }
+
+      .framework-step::before {
+        position: absolute;
+        top: 2px;
+        left: 0;
+        width: 13px;
+        height: 13px;
+        background: var(--white);
+        border: 2px solid #829ab1;
+        border-radius: 50%;
+        content: "";
+      }
+
+      .framework-step.is-active { color: var(--ink); }
+      .framework-step.is-active::before { background: var(--yellow); border-color: var(--ink); }
+      .framework-step.is-done::before { background: var(--green); border-color: var(--green); }
+      .demo-body { padding: 18px; }
+
+      .eval-lane {
+        --lane: var(--blue);
+        display: grid;
+        grid-template-columns: 138px 1.05fr 1.1fr 0.9fr;
+        min-height: 214px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        background: var(--white);
+        border: 2px solid transparent;
+        border-left: 8px solid var(--lane);
+        border-radius: 8px;
+        transition: border-color 160ms ease, opacity 160ms ease;
+      }
+
+      .eval-lane[data-lane="ui"] { --lane: var(--green); }
+      .eval-lane[data-lane="prompt"] { --lane: var(--purple); }
+      .eval-lane.is-active { border-color: var(--lane); border-left-width: 8px; }
+      .eval-lane.is-waiting { opacity: 0.55; }
+      .lane-name, .lane-cell { padding: 18px; }
+      .lane-cell { border-left: 1px solid #d9e2ec; }
+      .lane-name strong { display: block; color: var(--lane); font-size: 1.12rem; }
+      .lane-name span { color: var(--muted); font-size: 0.78rem; }
+
+      .cell-label {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+
+      .lane-cell strong { display: block; margin-bottom: 7px; }
+      .lane-cell p { margin: 0; color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+      .lane-cell code { word-break: break-word; }
+
+      .product-surface {
+        min-height: 104px;
+        padding: 12px;
+        background: #102a43;
+        border-radius: 6px;
+        color: #e6fffa;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 0.76rem;
+        line-height: 1.5;
+      }
+
+      .product-surface span { display: block; }
+      .surface-muted { color: #9fb3c8; }
+      .surface-result { color: #63e6be; }
+      .mini-form { background: #f5f8fa; color: var(--ink); font-family: inherit; }
+      .mini-form label { display: block; margin-bottom: 5px; font-size: 0.72rem; font-weight: 800; }
+      .mini-form input { width: 100%; padding: 8px; border: 1px solid #829ab1; border-radius: 4px; font: inherit; font-size: 0.75rem; }
+      .mini-form button { margin-top: 8px; padding: 7px 10px; border: 0; border-radius: 4px; background: var(--blue); color: var(--white); font-weight: 800; }
+      .ui-message { margin-top: 8px; color: var(--green); font-size: 0.72rem; font-weight: 800; }
+      .trial-dots { display: flex; gap: 6px; margin: 9px 0; }
+      .trial-dot { width: 24px; height: 24px; display: grid; place-items: center; background: #d9e2ec; border-radius: 50%; font-size: 0.66rem; font-weight: 900; }
+      .trial-dot.is-run { background: var(--purple); color: var(--white); }
+      .check-list { margin: 0; padding: 0; list-style: none; }
+      .check-list li { margin: 0 0 7px; color: var(--muted); font-size: 0.8rem; }
+      .check-list li::before { margin-right: 7px; color: #829ab1; content: "○"; font-weight: 900; }
+      .check-list li.is-pass::before { color: var(--green); content: "✓"; }
+      .lane-score { display: flex; align-items: baseline; gap: 7px; margin-top: 12px; }
+      .lane-score strong { margin: 0; color: var(--lane); font-size: 1.65rem; line-height: 1; }
+      .lane-score span { color: var(--muted); font-size: 0.74rem; font-weight: 800; }
+
+      .release-report {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 18px;
+        align-items: center;
+        padding: 18px 22px;
+        background: #cbd8e2;
+        border-top: 1px solid #9fb3c8;
+      }
+
+      .release-report p { margin: 3px 0 0; color: var(--muted); font-size: 0.82rem; }
+      .release-score { font-size: 1.45rem; font-weight: 900; }
+      .release-gate { padding: 6px 12px; background: #829ab1; border-radius: 999px; color: var(--white); font-size: 0.76rem; font-weight: 900; }
+      .release-report.is-pass { background: var(--soft-green); }
+      .release-report.is-pass .release-gate { background: var(--green); }
+      .demo-note { margin: 12px 4px 0; color: var(--muted); font-size: 0.76rem; }
+
       .comparison-wrap {
         overflow-x: auto;
         background: var(--white);
@@ -925,6 +1078,9 @@
         .report-head { grid-template-columns: 1fr 1fr; }
         .report-head > div:first-child { grid-column: 1 / -1; }
         .adoption-note { grid-template-columns: 1fr; gap: 4px; margin-top: -12px; }
+        .demo-toolbar { align-items: flex-start; flex-direction: column; }
+        .eval-lane { grid-template-columns: 130px 1fr; }
+        .lane-cell:nth-child(4) { grid-column: 2; }
       }
 
       @media (max-width: 560px) {
@@ -946,12 +1102,17 @@
         .report-total { flex-direction: column; gap: 4px; }
         .next-steps { grid-template-columns: 1fr; }
         footer .page { flex-direction: column; }
+        .framework-strip { grid-template-columns: repeat(3, 1fr); gap: 12px 4px; }
+        .eval-lane { grid-template-columns: 1fr; }
+        .lane-cell, .lane-cell:nth-child(4) { grid-column: 1; border-top: 1px solid #d9e2ec; border-left: 0; }
+        .release-report { grid-template-columns: 1fr; gap: 8px; }
       }
 
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
         .flow-step { transition: none; }
         .flow-step.is-active { animation: none; transform: none; }
+        .eval-lane { transition: none; }
       }
     </style>
   </head>
@@ -993,76 +1154,122 @@
           <h2>Every eval uses the same six stages.</h2>
           <p class="section-intro">The product and run count can change. The stages stay the same. This makes the framework reusable.</p>
 
-          <div class="flow-player" id="flow-player" data-scenario="backend">
-            <div class="flow-toolbar">
-              <div class="scenario-tabs" role="group" aria-label="Eval scenario">
-                <button class="scenario-tab is-selected" type="button" data-scenario="backend" aria-pressed="true">Backend</button>
-                <button class="scenario-tab" type="button" data-scenario="ui" aria-pressed="false">UI</button>
-                <button class="scenario-tab" type="button" data-scenario="prompt" aria-pressed="false">Prompt with Jev</button>
+          <div class="eval-demo" id="eval-demo">
+            <div class="demo-toolbar">
+              <div aria-live="polite">
+                <strong id="demo-status">Ready to run</strong>
+                <p id="demo-detail">Feature: reset a password without revealing whether an account exists.</p>
               </div>
-              <div class="flow-actions">
-                <button class="flow-action primary" id="flow-play" type="button">Play all three</button>
-                <button class="flow-action" id="flow-next" type="button">Next stage</button>
+              <div class="demo-actions">
+                <button class="demo-action primary" id="demo-run" type="button">Run complete example</button>
+                <button class="demo-action" id="demo-next" type="button">Next event</button>
+                <button class="demo-action" id="demo-reset" type="button">Reset</button>
               </div>
             </div>
 
-            <div class="flow-status" aria-live="polite">
-              <strong id="flow-scenario-name">Backend eval</strong>
-              <span id="flow-position">Stage 1 of 6</span>
+            <div class="framework-strip" aria-label="Reusable framework stages">
+              <span class="framework-step" data-framework-stage="0">Case</span>
+              <span class="framework-step" data-framework-stage="1">Adapter</span>
+              <span class="framework-step" data-framework-stage="2">Trial</span>
+              <span class="framework-step" data-framework-stage="3">Evidence</span>
+              <span class="framework-step" data-framework-stage="4">Grader</span>
+              <span class="framework-step" data-framework-stage="5">Report</span>
             </div>
 
-            <div class="flow" aria-label="Animated six-stage eval flow">
-            <article class="flow-step is-active" data-stage="0" aria-current="step">
-              <span class="step-number">01</span>
-              <h3>Case</h3>
-              <p>Create task: <code>Publish guide</code>.</p>
-            </article>
-            <article class="flow-step" data-stage="1">
-              <span class="step-number">02</span>
-              <h3>Adapter</h3>
-              <p>Send <code>POST /api/tasks</code>.</p>
-            </article>
-            <article class="flow-step" data-stage="2">
-              <span class="step-number">03</span>
-              <h3>Trial</h3>
-              <p>Run the backend case once.</p>
-            </article>
-            <article class="flow-step" data-stage="3">
-              <span class="step-number">04</span>
-              <h3>Evidence</h3>
-              <p>Capture the HTTP status and JSON.</p>
-            </article>
-            <article class="flow-step" data-stage="4">
-              <span class="step-number">05</span>
-              <h3>Grader</h3>
-              <p>Check status, title, and priority.</p>
-            </article>
-            <article class="flow-step" data-stage="5">
-              <span class="step-number">06</span>
-              <h3>Report</h3>
-              <p>Write the score and gate result.</p>
-            </article>
+            <div class="demo-body">
+              <article class="eval-lane" data-lane="backend">
+                <div class="lane-name"><strong>Backend</strong><span>HTTP adapter</span></div>
+                <div class="lane-cell">
+                  <span class="cell-label">Case and product action</span>
+                  <strong>Request a reset email</strong>
+                  <div class="product-surface" id="backend-surface">
+                    <span class="surface-muted">POST /api/password-reset</span>
+                    <span>{ "email": "alex@example.com" }</span>
+                    <span class="surface-result" id="backend-response"></span>
+                  </div>
+                </div>
+                <div class="lane-cell">
+                  <span class="cell-label">Captured evidence and grader</span>
+                  <ul class="check-list" data-checks="backend">
+                    <li>Status is 202</li>
+                    <li>Message is generic</li>
+                    <li>No account data leaks</li>
+                  </ul>
+                </div>
+                <div class="lane-cell">
+                  <span class="cell-label">Report</span>
+                  <p id="backend-report">Waiting for one deterministic trial.</p>
+                  <div class="lane-score"><strong id="backend-score">0 / 3</strong><span id="backend-gate">NOT RUN</span></div>
+                </div>
+              </article>
+
+              <article class="eval-lane" data-lane="ui">
+                <div class="lane-name"><strong>UI</strong><span>Browser adapter</span></div>
+                <div class="lane-cell">
+                  <span class="cell-label">Case and product action</span>
+                  <strong>Use the reset form</strong>
+                  <div class="product-surface mini-form">
+                    <label for="demo-email">Email</label>
+                    <input id="demo-email" type="email" value="" readonly>
+                    <button type="button" tabindex="-1">Send reset link</button>
+                    <div class="ui-message" id="ui-message" role="status"></div>
+                  </div>
+                </div>
+                <div class="lane-cell">
+                  <span class="cell-label">Captured evidence and grader</span>
+                  <ul class="check-list" data-checks="ui">
+                    <li>Confirmation is visible</li>
+                    <li>Status region announces it</li>
+                    <li>Email field is cleared</li>
+                  </ul>
+                </div>
+                <div class="lane-cell">
+                  <span class="cell-label">Report</span>
+                  <p id="ui-report">Waiting for one browser trial.</p>
+                  <div class="lane-score"><strong id="ui-score">0 / 3</strong><span id="ui-gate">NOT RUN</span></div>
+                </div>
+              </article>
+
+              <article class="eval-lane" data-lane="prompt">
+                <div class="lane-name"><strong>Prompt</strong><span>Model adapter and Jev</span></div>
+                <div class="lane-cell">
+                  <span class="cell-label">Case and product action</span>
+                  <strong>Answer the support question</strong>
+                  <p>“I forgot my password. What should I do?”</p>
+                  <div class="trial-dots" aria-label="Five model trials">
+                    <span class="trial-dot">1</span><span class="trial-dot">2</span><span class="trial-dot">3</span><span class="trial-dot">4</span><span class="trial-dot">5</span>
+                  </div>
+                  <p id="prompt-sample">No model reply captured.</p>
+                </div>
+                <div class="lane-cell">
+                  <span class="cell-label">Captured evidence and Jev grader</span>
+                  <ul class="check-list" data-checks="prompt">
+                    <li>Gives correct reset steps</li>
+                    <li>Does not request a password</li>
+                    <li>Uses clear language</li>
+                  </ul>
+                </div>
+                <div class="lane-cell">
+                  <span class="cell-label">Report</span>
+                  <p id="prompt-report">Waiting for five variable trials.</p>
+                  <div class="lane-score"><strong id="prompt-score">0 / 20</strong><span id="prompt-gate">NOT RUN</span></div>
+                </div>
+              </article>
             </div>
 
-            <div class="flow-detail">
-              <div>
-                <span>Current action</span>
-                <strong id="flow-stage-name">Case</strong>
-                <p id="flow-stage-detail">Define the task action and its expected values.</p>
-              </div>
-              <div>
-                <span class="flow-tool" id="flow-tool">Case JSON</span>
-                <strong>Stage output</strong>
-                <p id="flow-output">Expected title: Publish guide. Expected priority: high.</p>
-              </div>
+            <div class="release-report" id="release-report">
+              <div><strong>Shared CI gate</strong><p>All three suites use the same score and report contract.</p></div>
+              <span class="release-score" id="release-score">0 / 26</span>
+              <span class="release-gate" id="release-gate">WAITING</span>
             </div>
           </div>
+          <p class="demo-note">This page uses saved sample model replies. A production prompt adapter sends the same case to the model and sends each reply to Jev through the TypeSafe API.</p>
         </section>
 
         <section id="examples">
           <p class="eyebrow">Three examples</p>
-          <h2>Compare backend, UI, and prompt evaluation.</h2>
-          <p class="section-intro">Each column follows the same stages. The adapter, run count, evidence, and grader fit the product behavior.</p>
+          <h2>One feature needs three types of eval.</h2>
+          <p class="section-intro">The password-reset case stays the same. Each adapter runs a different product surface and captures different evidence.</p>
 
           <div class="comparison-wrap">
             <table class="comparison">
@@ -1077,14 +1284,14 @@
               <tbody>
                 <tr>
                   <th scope="row">1. Case</th>
-                  <td><strong>Create a task.</strong>Title: <code>Publish guide</code>.</td>
-                  <td><strong>Create a visible task.</strong>Use the task form.</td>
-                  <td><strong>Answer a support question.</strong>Explain how to reset a password.</td>
+                  <td><strong>Request a reset email.</strong>Do not reveal whether the account exists.</td>
+                  <td><strong>Use the reset form.</strong>Show a safe confirmation.</td>
+                  <td><strong>Answer a support question.</strong>Explain how to reset a password safely.</td>
                 </tr>
                 <tr>
                   <th scope="row">2. Adapter</th>
-                  <td><strong>HTTP adapter</strong>Send <code>POST /api/tasks</code>.</td>
-                  <td><strong>Browser adapter</strong>Fill the title. Select <code>Add task</code>.</td>
+                  <td><strong>HTTP adapter</strong>Send <code>POST /api/password-reset</code>.</td>
+                  <td><strong>Browser adapter</strong>Fill the email. Select <code>Send reset link</code>.</td>
                   <td><strong>Model adapter</strong>Send the same prompt to the selected model.</td>
                 </tr>
                 <tr>
@@ -1095,20 +1302,20 @@
                 </tr>
                 <tr>
                   <th scope="row">4. Evidence</th>
-                  <td><strong>Capture the response.</strong>Status is <code>201</code>. The JSON contains the title.</td>
-                  <td><strong>Capture the page state.</strong>The task list shows the title.</td>
+                  <td><strong>Capture the response.</strong>Status is <code>202</code>. The message is generic.</td>
+                  <td><strong>Capture the page state.</strong>The confirmation is visible and announced.</td>
                   <td><strong>Capture all five answers.</strong>Keep each output and model setting.</td>
                 </tr>
                 <tr>
                   <th scope="row">5. Grader</th>
-                  <td><strong>Use exact rules.</strong>Check the status and JSON fields.</td>
-                  <td><strong>Use page rules.</strong>Check visible text and task state.</td>
-                  <td><strong>Use a four-point rubric.</strong>Correct steps: 2. Safety: 1. Clear language: 1.</td>
+                  <td><strong>Use exact rules.</strong>Check status, message, and account-data safety.</td>
+                  <td><strong>Use page rules.</strong>Check confirmation, status region, and cleared field.</td>
+                  <td><strong>Use Jev.</strong>Check correct steps, safe advice, and clear language.</td>
                 </tr>
                 <tr>
                   <th scope="row">6. Report</th>
-                  <td><strong>5 of 5 points.</strong>Score: <code>1.00</code>. Pass.</td>
-                  <td><strong>5 of 5 points.</strong>Score: <code>1.00</code>. Pass.</td>
+                  <td><strong>3 of 3 points.</strong>Score: <code>1.00</code>. Pass.</td>
+                  <td><strong>3 of 3 points.</strong>Score: <code>1.00</code>. Pass.</td>
                   <td><strong>18 of 20 points.</strong>Score: <code>0.90</code>. Pass.</td>
                 </tr>
               </tbody>
@@ -1156,7 +1363,7 @@
           <div class="typesafe-fit">
             <article>
               <h3>Keep exact checks in code.</h3>
-              <p>Code should check HTTP status, JSON fields, visible text, task counts, and score arithmetic. These values have one exact answer. A model adds cost and uncertainty.</p>
+              <p>Code should check HTTP status, JSON fields, visible text, field state, and score arithmetic. These values have one exact answer. A model adds cost and uncertainty.</p>
             </article>
             <article>
               <h3>Use Jev for semantic grading.</h3>
@@ -1233,15 +1440,15 @@ Authorization: Bearer $TYPESAFE_API_KEY
         <section>
           <div class="score-layout">
             <div class="score-box" aria-label="Example score">
-              <span class="number">0.93</span>
+              <span class="number">0.92</span>
               <p>Combined score</p>
             </div>
             <div>
               <p class="eyebrow">Read the result</p>
               <h2>Combine points from all three cases.</h2>
-              <div class="formula">(5 + 5 + 18) ÷ (5 + 5 + 20) = 0.93</div>
-              <p>The backend case earns 5 points. The UI case earns 5 points. The prompt case earns 18 points across five trials.</p>
-              <p>The gate is <strong>0.90</strong>. The combined score is <strong>0.93</strong>, so the eval passes. CI stops the deployment when the score is lower than the gate.</p>
+              <div class="formula">(3 + 3 + 18) ÷ (3 + 3 + 20) = 0.92</div>
+              <p>The backend case earns 3 points. The UI case earns 3 points. The prompt case earns 18 points across five trials.</p>
+              <p>The gate is <strong>0.90</strong>. The combined score is <strong>0.92</strong>, so the eval passes. CI stops the deployment when the score is lower than the gate.</p>
             </div>
           </div>
         </section>
@@ -1255,28 +1462,28 @@ Authorization: Bearer $TYPESAFE_API_KEY
             <div class="report-head" aria-label="Demo report summary">
               <div><span>Report</span><strong>Product quality gate</strong></div>
               <div><span>Decision</span><strong class="report-pass">PASS</strong></div>
-              <div><span>Score</span><strong>0.93</strong></div>
+              <div><span>Score</span><strong>0.92</strong></div>
               <div><span>Gate</span><strong>0.90</strong></div>
               <div><span>Trials</span><strong>7</strong></div>
             </div>
 
             <details class="report-case" open>
               <summary>
-                <span class="case-name">Backend case: Create a task</span>
-                <span class="case-score">5 / 5, score 1.00</span>
+                <span class="case-name">Backend case: Request a reset email</span>
+                <span class="case-score">3 / 3, score 1.00</span>
                 <span class="status-pass">PASS</span>
               </summary>
               <div class="case-body">
                 <div class="case-context">
-                  <div><strong>Input</strong><p><code>POST /api/tasks</code> with title <code>Publish guide</code> and priority <code>high</code>.</p></div>
-                  <div><strong>Captured evidence</strong><p>HTTP status <code>201</code>. The response includes the new task.</p></div>
+                  <div><strong>Input</strong><p><code>POST /api/password-reset</code> with <code>alex@example.com</code>.</p></div>
+                  <div><strong>Captured evidence</strong><p>HTTP status <code>202</code>. The response uses a generic message.</p></div>
                 </div>
                 <table class="grade-table">
                   <thead><tr><th>Grader rule</th><th>Expected</th><th>Actual evidence</th><th>Points</th></tr></thead>
                   <tbody>
-                    <tr><td>Creation status</td><td><code>201</code></td><td><code>201</code></td><td>2 / 2</td></tr>
-                    <tr><td>Task title</td><td><code>Publish guide</code></td><td><code>Publish guide</code></td><td>2 / 2</td></tr>
-                    <tr><td>Task priority</td><td><code>high</code></td><td><code>high</code></td><td>1 / 1</td></tr>
+                    <tr><td>Accepted status</td><td><code>202</code></td><td><code>202</code></td><td>1 / 1</td></tr>
+                    <tr><td>Generic message</td><td>No account disclosure</td><td>If the account exists, we sent a link.</td><td>1 / 1</td></tr>
+                    <tr><td>Response data</td><td>No account fields</td><td>No account fields</td><td>1 / 1</td></tr>
                   </tbody>
                 </table>
                 <p class="result-line">All backend rules pass. Score: 1.00.</p>
@@ -1285,21 +1492,21 @@ Authorization: Bearer $TYPESAFE_API_KEY
 
             <details class="report-case">
               <summary>
-                <span class="case-name">UI case: Create a visible task</span>
-                <span class="case-score">5 / 5, score 1.00</span>
+                <span class="case-name">UI case: Submit the reset form</span>
+                <span class="case-score">3 / 3, score 1.00</span>
                 <span class="status-pass">PASS</span>
               </summary>
               <div class="case-body">
                 <div class="case-context">
-                  <div><strong>Input</strong><p>Enter <code>Publish guide</code>. Select <code>high</code>. Select <code>Add task</code>.</p></div>
-                  <div><strong>Captured evidence</strong><p>The task list shows the title and priority. The summary shows one open task.</p></div>
+                  <div><strong>Input</strong><p>Enter <code>alex@example.com</code>. Select <code>Send reset link</code>.</p></div>
+                  <div><strong>Captured evidence</strong><p>The page shows and announces a generic confirmation. The email field is empty.</p></div>
                 </div>
                 <table class="grade-table">
                   <thead><tr><th>Grader rule</th><th>Expected</th><th>Actual evidence</th><th>Points</th></tr></thead>
                   <tbody>
-                    <tr><td>Visible title</td><td><code>Publish guide</code></td><td><code>Publish guide</code></td><td>2 / 2</td></tr>
-                    <tr><td>Visible priority</td><td><code>high</code></td><td><code>high</code></td><td>1 / 1</td></tr>
-                    <tr><td>Open-task summary</td><td><code>1 open / 0 done</code></td><td><code>1 open / 0 done</code></td><td>2 / 2</td></tr>
+                    <tr><td>Visible confirmation</td><td>Generic message</td><td>Generic message is visible</td><td>1 / 1</td></tr>
+                    <tr><td>Status region</td><td>Announcement</td><td>Message uses <code>role=status</code></td><td>1 / 1</td></tr>
+                    <tr><td>Email field</td><td>Empty</td><td>Empty</td><td>1 / 1</td></tr>
                   </tbody>
                 </table>
                 <p class="result-line">All UI rules pass. Score: 1.00.</p>
@@ -1330,7 +1537,7 @@ Authorization: Bearer $TYPESAFE_API_KEY
                 <p class="result-line">Five prompt trials earn 18 of 20 points. Score: 0.90.</p>
               </div>
             </details>
-            <div class="report-total"><span>Total: 28 / 30</span><span>Final score: 0.93</span><span>Decision: PASS</span></div>
+            <div class="report-total"><span>Total: 24 / 26</span><span>Final score: 0.92</span><span>Decision: PASS</span></div>
           </div>
         </section>
 
@@ -1369,134 +1576,138 @@ Authorization: Bearer $TYPESAFE_API_KEY
       const button = document.querySelector('#show-script');
       const script = document.querySelector('#teach-script');
 
-      const flowScenarios = {
-        backend: {
-          name: 'Backend eval',
-          steps: [
-            { text: 'Create task: Publish guide.', detail: 'Define the task action and its expected values.', tool: 'Case JSON', output: 'Expected title: Publish guide. Expected priority: high.' },
-            { text: 'Send POST /api/tasks.', detail: 'The HTTP adapter sends the product request.', tool: 'HTTP adapter', output: 'The API receives one create-task request.' },
-            { text: 'Run the backend case once.', detail: 'The runner executes the deterministic case.', tool: 'Runner', output: 'Trial 1 of 1 completes.' },
-            { text: 'Capture the HTTP status and JSON.', detail: 'The adapter records the returned values.', tool: 'Response capture', output: 'Status 201. The title and priority match.' },
-            { text: 'Check status, title, and priority.', detail: 'The exact grader applies three code rules.', tool: 'Exact grader', output: 'The case earns 5 of 5 points.' },
-            { text: 'Write the score and gate result.', detail: 'The reporter combines the criterion points.', tool: 'JSON report', output: 'Score 1.00. Gate result: PASS.' }
-          ]
-        },
-        ui: {
-          name: 'UI eval',
-          steps: [
-            { text: 'Create a visible task.', detail: 'Define the user action and visible result.', tool: 'Case JSON', output: 'Expected title: Publish guide. Expected count: 1 open.' },
-            { text: 'Fill the form and select Add task.', detail: 'The browser adapter performs the user action.', tool: 'Playwright adapter', output: 'The browser submits the task form.' },
-            { text: 'Run the browser case once.', detail: 'The runner executes the deterministic UI flow.', tool: 'Runner', output: 'Trial 1 of 1 completes.' },
-            { text: 'Capture text, count, and task state.', detail: 'The adapter records what the user can see.', tool: 'Page capture', output: 'The title is visible. The summary says 1 open.' },
-            { text: 'Check visible page rules.', detail: 'The UI grader checks text, count, and state.', tool: 'UI grader', output: 'The case earns 5 of 5 points.' },
-            { text: 'Write the score and gate result.', detail: 'The reporter combines the criterion points.', tool: 'HTML report', output: 'Score 1.00. Gate result: PASS.' }
-          ]
-        },
-        prompt: {
-          name: 'Prompt eval with Jev',
-          steps: [
-            { text: 'Ask how to reset a password.', detail: 'Define the prompt, product policy, and rubric.', tool: 'Prompt case', output: 'Required: correct steps, safe advice, and clear language.' },
-            { text: 'Send the prompt to the selected model.', detail: 'The model adapter generates one candidate reply.', tool: 'Model adapter', output: 'One password-reset reply returns.' },
-            { text: 'Run the same prompt five times.', detail: 'Repeated trials measure output consistency.', tool: 'Runner', output: 'Five candidate replies complete.' },
-            { text: 'Capture all five prompt replies.', detail: 'The adapter saves each reply and model setting.', tool: 'Reply capture', output: 'Five replies are ready for grading.' },
-            { text: 'Jev grades each reply.', detail: 'Jev answers typed questions through the TypeSafe API.', tool: 'Jev semantic grader', output: 'Choice: complete. Noul safe: pass. Noul clear: pass. Example trial: 4 of 4.' },
-            { text: 'Combine five graded trials.', detail: 'The reporter adds all earned and available points.', tool: 'Eval report', output: '18 of 20 points. Score 0.90. Gate result: PASS.' }
-          ]
-        }
-      };
-
       const stageNames = ['Case', 'Adapter', 'Trial', 'Evidence', 'Grader', 'Report'];
-      const scenarioOrder = ['backend', 'ui', 'prompt'];
-      const flowPlayer = document.querySelector('#flow-player');
-      const scenarioButtons = [...document.querySelectorAll('.scenario-tab')];
-      const flowSteps = [...document.querySelectorAll('.flow-step')];
-      const playButton = document.querySelector('#flow-play');
-      const nextButton = document.querySelector('#flow-next');
-      const scenarioName = document.querySelector('#flow-scenario-name');
-      const flowPosition = document.querySelector('#flow-position');
-      const stageName = document.querySelector('#flow-stage-name');
-      const stageDetail = document.querySelector('#flow-stage-detail');
-      const flowTool = document.querySelector('#flow-tool');
-      const flowOutput = document.querySelector('#flow-output');
-      let activeScenario = 'backend';
-      let activeStage = 0;
-      let playScenarioIndex = 0;
-      let flowTimer = null;
+      const laneNames = { backend: 'Backend', ui: 'UI', prompt: 'Prompt' };
+      const demoEvents = ['backend', 'ui', 'prompt'].flatMap((lane) =>
+        stageNames.map((stage, stageIndex) => ({ lane, stage, stageIndex }))
+      );
+      const lanes = [...document.querySelectorAll('.eval-lane')];
+      const frameworkSteps = [...document.querySelectorAll('.framework-step')];
+      const runButton = document.querySelector('#demo-run');
+      const nextButton = document.querySelector('#demo-next');
+      const resetButton = document.querySelector('#demo-reset');
+      const demoStatus = document.querySelector('#demo-status');
+      const demoDetail = document.querySelector('#demo-detail');
+      let eventIndex = -1;
+      let demoTimer = null;
 
-      function stopFlow() {
-        window.clearInterval(flowTimer);
-        flowTimer = null;
-        playButton.textContent = 'Play all three';
-      }
-
-      function renderFlow() {
-        const scenario = flowScenarios[activeScenario];
-        const step = scenario.steps[activeStage];
-        flowPlayer.dataset.scenario = activeScenario;
-        scenarioName.textContent = scenario.name;
-        flowPosition.textContent = `Stage ${activeStage + 1} of 6`;
-        stageName.textContent = stageNames[activeStage];
-        stageDetail.textContent = step.detail;
-        flowTool.textContent = step.tool;
-        flowTool.classList.toggle('is-jev', step.tool === 'Jev semantic grader');
-        flowOutput.textContent = step.output;
-
-        scenarioButtons.forEach((scenarioButton) => {
-          const selected = scenarioButton.dataset.scenario === activeScenario;
-          scenarioButton.classList.toggle('is-selected', selected);
-          scenarioButton.setAttribute('aria-pressed', String(selected));
-        });
-
-        flowSteps.forEach((flowStep, index) => {
-          flowStep.classList.toggle('is-active', index === activeStage);
-          flowStep.classList.toggle('is-complete', index < activeStage);
-          if (index === activeStage) flowStep.setAttribute('aria-current', 'step');
-          else flowStep.removeAttribute('aria-current');
-          flowStep.querySelector('p').textContent = scenario.steps[index].text;
+      function setChecks(lane, passed) {
+        document.querySelectorAll(`[data-checks="${lane}"] li`).forEach((item) => {
+          item.classList.toggle('is-pass', passed);
         });
       }
 
-      function startFlow() {
-        if (flowTimer) {
-          stopFlow();
+      function resetDemo() {
+        window.clearInterval(demoTimer);
+        demoTimer = null;
+        eventIndex = -1;
+        runButton.textContent = 'Run complete example';
+        demoStatus.textContent = 'Ready to run';
+        demoDetail.textContent = 'Feature: reset a password without revealing whether an account exists.';
+        lanes.forEach((lane) => lane.classList.remove('is-active', 'is-waiting'));
+        frameworkSteps.forEach((step) => step.classList.remove('is-active', 'is-done'));
+        document.querySelector('#backend-response').textContent = '';
+        document.querySelector('#demo-email').value = '';
+        document.querySelector('#ui-message').textContent = '';
+        document.querySelector('#prompt-sample').textContent = 'No model reply captured.';
+        document.querySelectorAll('.trial-dot').forEach((dot) => dot.classList.remove('is-run'));
+        ['backend', 'ui', 'prompt'].forEach((lane) => setChecks(lane, false));
+        document.querySelector('#backend-report').textContent = 'Waiting for one deterministic trial.';
+        document.querySelector('#ui-report').textContent = 'Waiting for one browser trial.';
+        document.querySelector('#prompt-report').textContent = 'Waiting for five variable trials.';
+        document.querySelector('#backend-score').textContent = '0 / 3';
+        document.querySelector('#ui-score').textContent = '0 / 3';
+        document.querySelector('#prompt-score').textContent = '0 / 20';
+        document.querySelector('#backend-gate').textContent = 'NOT RUN';
+        document.querySelector('#ui-gate').textContent = 'NOT RUN';
+        document.querySelector('#prompt-gate').textContent = 'NOT RUN';
+        document.querySelector('#release-score').textContent = '0 / 26';
+        document.querySelector('#release-gate').textContent = 'WAITING';
+        document.querySelector('#release-report').classList.remove('is-pass');
+      }
+
+      function applyStage(event) {
+        const { lane, stage, stageIndex } = event;
+        demoStatus.textContent = `${laneNames[lane]} eval: ${stage}`;
+        demoDetail.textContent = `The shared framework now runs the ${stage.toLowerCase()} stage through the ${laneNames[lane]} adapter.`;
+        lanes.forEach((item) => {
+          item.classList.toggle('is-active', item.dataset.lane === lane);
+          item.classList.toggle('is-waiting', item.dataset.lane !== lane);
+        });
+        frameworkSteps.forEach((step, index) => {
+          step.classList.toggle('is-active', index === stageIndex);
+          step.classList.toggle('is-done', index < stageIndex);
+        });
+
+        if (lane === 'backend' && stageIndex === 2) document.querySelector('#backend-response').textContent = 'sending request...';
+        if (lane === 'backend' && stageIndex === 3) document.querySelector('#backend-response').textContent = '202 { "message": "If the account exists, we sent a link." }';
+        if (lane === 'backend' && stageIndex === 4) setChecks('backend', true);
+        if (lane === 'backend' && stageIndex === 5) {
+          document.querySelector('#backend-report').textContent = 'The exact grader passed all three rules.';
+          document.querySelector('#backend-score').textContent = '3 / 3';
+          document.querySelector('#backend-gate').textContent = 'PASS';
+        }
+
+        if (lane === 'ui' && stageIndex === 1) document.querySelector('#demo-email').value = 'alex@example.com';
+        if (lane === 'ui' && stageIndex === 2) document.querySelector('#ui-message').textContent = 'Submitting the form...';
+        if (lane === 'ui' && stageIndex === 3) {
+          document.querySelector('#demo-email').value = '';
+          document.querySelector('#ui-message').textContent = 'If the account exists, we sent a reset link.';
+        }
+        if (lane === 'ui' && stageIndex === 4) setChecks('ui', true);
+        if (lane === 'ui' && stageIndex === 5) {
+          document.querySelector('#ui-report').textContent = 'The browser grader passed all three rules.';
+          document.querySelector('#ui-score').textContent = '3 / 3';
+          document.querySelector('#ui-gate').textContent = 'PASS';
+        }
+
+        if (lane === 'prompt' && stageIndex === 2) document.querySelectorAll('.trial-dot').forEach((dot) => dot.classList.add('is-run'));
+        if (lane === 'prompt' && stageIndex === 3) document.querySelector('#prompt-sample').textContent = 'Sample: Select “Forgot password,” enter your email, and use the secure link.';
+        if (lane === 'prompt' && stageIndex === 4) setChecks('prompt', true);
+        if (lane === 'prompt' && stageIndex === 5) {
+          document.querySelector('#prompt-report').textContent = 'Jev graded five replies. Two replies lost one clarity point.';
+          document.querySelector('#prompt-score').textContent = '18 / 20';
+          document.querySelector('#prompt-gate').textContent = 'PASS';
+          document.querySelector('#release-score').textContent = '24 / 26';
+          document.querySelector('#release-gate').textContent = 'PASS 0.92';
+          document.querySelector('#release-report').classList.add('is-pass');
+        }
+      }
+
+      function nextEvent() {
+        if (eventIndex >= demoEvents.length - 1) return false;
+        eventIndex += 1;
+        applyStage(demoEvents[eventIndex]);
+        return true;
+      }
+
+      function toggleRun() {
+        if (demoTimer) {
+          window.clearInterval(demoTimer);
+          demoTimer = null;
+          runButton.textContent = 'Continue example';
           return;
         }
-
-        activeScenario = 'backend';
-        activeStage = 0;
-        playScenarioIndex = 0;
-        playButton.textContent = 'Pause';
-        renderFlow();
-        flowTimer = window.setInterval(() => {
-          if (activeStage < 5) {
-            activeStage += 1;
-          } else if (playScenarioIndex < scenarioOrder.length - 1) {
-            playScenarioIndex += 1;
-            activeScenario = scenarioOrder[playScenarioIndex];
-            activeStage = 0;
-          } else {
-            stopFlow();
-            return;
+        if (eventIndex >= demoEvents.length - 1) resetDemo();
+        runButton.textContent = 'Pause';
+        if (eventIndex < 0) nextEvent();
+        demoTimer = window.setInterval(() => {
+          if (!nextEvent()) {
+            window.clearInterval(demoTimer);
+            demoTimer = null;
+            runButton.textContent = 'Run again';
           }
-          renderFlow();
-        }, 1600);
+        }, 900);
       }
 
-      scenarioButtons.forEach((scenarioButton) => {
-        scenarioButton.addEventListener('click', () => {
-          stopFlow();
-          activeScenario = scenarioButton.dataset.scenario;
-          activeStage = 0;
-          renderFlow();
-        });
-      });
-
-      playButton.addEventListener('click', startFlow);
+      runButton.addEventListener('click', toggleRun);
       nextButton.addEventListener('click', () => {
-        stopFlow();
-        activeStage = (activeStage + 1) % stageNames.length;
-        renderFlow();
+        window.clearInterval(demoTimer);
+        demoTimer = null;
+        runButton.textContent = 'Continue example';
+        nextEvent();
       });
+      resetButton.addEventListener('click', resetDemo);
 
       button.addEventListener('click', () => {
         const isVisible = script.classList.toggle('is-visible');

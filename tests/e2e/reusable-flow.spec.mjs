@@ -6,48 +6,48 @@ test.beforeEach(async ({ page }) => {
   await page.goto(guideUrl);
 });
 
-test('each scenario uses the same six-stage flow', async ({ page }) => {
-  await expect(page.getByRole('button', { name: 'Backend' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('#flow-scenario-name')).toHaveText('Backend eval');
-
-  await page.getByRole('button', { name: 'UI', exact: true }).click();
-  await expect(page.locator('#flow-scenario-name')).toHaveText('UI eval');
-  await expect(page.locator('.flow-step').first()).toContainText('Create a visible task.');
-
-  await page.getByRole('button', { name: 'Prompt with Jev' }).click();
-  await expect(page.locator('#flow-scenario-name')).toHaveText('Prompt eval with Jev');
-
-  for (let step = 0; step < 4; step += 1) {
-    await page.getByRole('button', { name: 'Next stage' }).click();
-  }
-
-  await expect(page.locator('#flow-position')).toHaveText('Stage 5 of 6');
-  await expect(page.locator('#flow-stage-name')).toHaveText('Grader');
-  await expect(page.locator('#flow-tool')).toHaveText('Jev semantic grader');
-  await expect(page.locator('#flow-output')).toContainText('Choice: complete');
-  await expect(page.locator('.flow-step.is-complete')).toHaveCount(4);
-  await expect(page.locator('.flow-step.is-active')).toHaveCount(1);
-  await expect(page.locator('.flow-step.is-active')).toHaveAttribute('aria-current', 'step');
+test('the demo shows one feature across all three eval lanes', async ({ page }) => {
+  await expect(page.locator('.eval-lane')).toHaveCount(3);
+  await expect(page.locator('[data-lane="backend"]')).toContainText('POST /api/password-reset');
+  await expect(page.locator('[data-lane="ui"]')).toContainText('Send reset link');
+  await expect(page.locator('[data-lane="prompt"]')).toContainText('Model adapter and Jev');
+  await expect(page.locator('.framework-step')).toHaveCount(6);
 });
 
-test('play control advances and pauses the flow', async ({ page }) => {
-  const play = page.getByRole('button', { name: 'Play all three' });
-  await play.click();
-  await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
-  await expect(page.locator('#flow-position')).toHaveText('Stage 2 of 6', { timeout: 2500 });
-
-  await page.getByRole('button', { name: 'Pause' }).click();
-  await expect(page.getByRole('button', { name: 'Play all three' })).toBeVisible();
+test('next event runs the backend example stage by stage', async ({ page }) => {
+  const next = page.getByRole('button', { name: 'Next event' });
+  await next.click();
+  await expect(page.locator('#demo-status')).toHaveText('Backend eval: Case');
+  await next.click();
+  await next.click();
+  await expect(page.locator('#backend-response')).toHaveText('sending request...');
+  await next.click();
+  await expect(page.locator('#backend-response')).toContainText('202');
+  await next.click();
+  await expect(page.locator('[data-checks="backend"] .is-pass')).toHaveCount(3);
+  await next.click();
+  await expect(page.locator('#backend-score')).toHaveText('3 / 3');
+  await expect(page.locator('#backend-gate')).toHaveText('PASS');
 });
 
-test('play all completes backend, UI, and prompt scenarios', async ({ page }) => {
+test('complete run produces UI, prompt, and shared reports', async ({ page }) => {
   await page.clock.install();
   await page.reload();
-  await page.getByRole('button', { name: 'Play all three' }).click();
-  await page.clock.runFor(28800);
+  await page.getByRole('button', { name: 'Run complete example' }).click();
+  await page.clock.runFor(18000);
 
-  await expect(page.locator('#flow-scenario-name')).toHaveText('Prompt eval with Jev');
-  await expect(page.locator('#flow-position')).toHaveText('Stage 6 of 6');
-  await expect(page.locator('#flow-output')).toContainText('18 of 20 points');
-  await expect(page.getByRole('button', { name: 'Play all three' })).toBeVisible();
+  await expect(page.locator('#ui-message')).toContainText('sent a reset link');
+  await expect(page.locator('.trial-dot.is-run')).toHaveCount(5);
+  await expect(page.locator('#prompt-report')).toContainText('Jev graded five replies');
+  await expect(page.locator('#prompt-score')).toHaveText('18 / 20');
+  await expect(page.locator('#release-score')).toHaveText('24 / 26');
+  await expect(page.locator('#release-gate')).toHaveText('PASS 0.92');
+});
+
+test('reset clears all demo output', async ({ page }) => {
+  await page.getByRole('button', { name: 'Next event' }).click();
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  await expect(page.locator('#demo-status')).toHaveText('Ready to run');
+  await expect(page.locator('#backend-score')).toHaveText('0 / 3');
+  await expect(page.locator('#release-gate')).toHaveText('WAITING');
 });
