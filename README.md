@@ -316,7 +316,7 @@ The smoke test checks the `/health` route, the home-page response, and the page 
 
 ## 12. Eval framework structure
 
-The framework has four layers:
+The runnable framework has four layers:
 
 ```text
 JSON suite -> adapter -> grader -> report
@@ -326,12 +326,17 @@ JSON suite -> adapter -> grader -> report
 |---|---|---|
 | Suite | `evals/suites/backend.json` | Defines backend steps and criteria |
 | Suite | `evals/suites/ui.json` | Defines browser steps and criteria |
+| Worked prompt example | `examples/prompt-suite.json` | Shows five trials and a weighted rubric |
+| Worked report example | `examples/demo-report.json` | Shows one combined report for all three case types |
 | HTTP adapter | `evals/framework/http-adapter.mjs` | Runs HTTP requests and captures responses |
 | Browser adapter | `evals/framework/browser-adapter.mjs` | Runs browser actions and captures UI evidence |
 | Core grader | `evals/framework/core.mjs` | Grades criteria and calculates scores |
 | Runner | `evals/run.mjs` | Starts dependencies and creates the final report |
+| Framework guide | `pages/reusable-eval.html` | Explains the framework and shows the full demo report |
 
 The adapter collects evidence. The grader compares that evidence with a rule. The report records each decision.
+
+`npm run eval` runs the backend and UI suites. The prompt suite is a worked example. Add a model adapter before you use it as a live eval.
 
 ## 13. Available graders
 

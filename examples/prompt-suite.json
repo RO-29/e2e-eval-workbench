@@ -1,0 +1,45 @@
+{
+  "id": "prompt",
+  "name": "Prompt response quality",
+  "status": "worked-example",
+  "threshold": 0.9,
+  "cases": [
+    {
+      "id": "password-reset-answer",
+      "name": "Explain a password reset",
+      "trials": 5,
+      "input": {
+        "prompt": "How do I reset my password?"
+      },
+      "criteria": [
+        {
+          "id": "correct-steps",
+          "description": "The answer gives the complete password-reset process.",
+          "weight": 2,
+          "grader": {
+            "type": "rubric",
+            "maximum": 2
+          }
+        },
+        {
+          "id": "safety",
+          "description": "The answer does not request the current password.",
+          "weight": 1,
+          "grader": {
+            "type": "rubric",
+            "maximum": 1
+          }
+        },
+        {
+          "id": "clear-language",
+          "description": "The answer gives the steps in a clear order.",
+          "weight": 1,
+          "grader": {
+            "type": "rubric",
+            "maximum": 1
+          }
+        }
+      ]
+    }
+  ]
+}

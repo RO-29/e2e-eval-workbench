@@ -607,7 +607,7 @@ skipped 0
 
 <p>The smoke test checks the <code>/health</code> route, the home-page response, and the page title.</p>
 <h2 id="12-eval-framework-structure">12. Eval framework structure</h2>
-<p>The framework has four layers:</p>
+<p>The runnable framework has four layers:</p>
 <pre class="codehilite"><code class="language-text">JSON suite -&gt; adapter -&gt; grader -&gt; report
 </code></pre>
 
@@ -631,6 +631,16 @@ skipped 0
 <td>Defines browser steps and criteria</td>
 </tr>
 <tr>
+<td>Worked prompt example</td>
+<td><code>examples/prompt-suite.json</code></td>
+<td>Shows five trials and a weighted rubric</td>
+</tr>
+<tr>
+<td>Worked report example</td>
+<td><code>examples/demo-report.json</code></td>
+<td>Shows one combined report for all three case types</td>
+</tr>
+<tr>
 <td>HTTP adapter</td>
 <td><code>evals/framework/http-adapter.mjs</code></td>
 <td>Runs HTTP requests and captures responses</td>
@@ -650,9 +660,15 @@ skipped 0
 <td><code>evals/run.mjs</code></td>
 <td>Starts dependencies and creates the final report</td>
 </tr>
+<tr>
+<td>Framework guide</td>
+<td><code>pages/reusable-eval.html</code></td>
+<td>Explains the framework and shows the full demo report</td>
+</tr>
 </tbody>
 </table>
 <p>The adapter collects evidence. The grader compares that evidence with a rule. The report records each decision.</p>
+<p><code>npm run eval</code> runs the backend and UI suites. The prompt suite is a worked example. Add a model adapter before you use it as a live eval.</p>
 <h2 id="13-available-graders">13. Available graders</h2>
 <p>Use one grader for each criterion:</p>
 <table>

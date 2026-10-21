@@ -1,0 +1,49 @@
+{
+  "name": "Product quality gate",
+  "status": "worked-example",
+  "score": 0.93,
+  "threshold": 0.9,
+  "passed": true,
+  "totals": {
+    "cases": 3,
+    "trials": 7,
+    "earned": 28,
+    "available": 30
+  },
+  "cases": [
+    {
+      "id": "backend",
+      "name": "Create a task through the API",
+      "trials": 1,
+      "earned": 5,
+      "available": 5,
+      "score": 1,
+      "passed": true
+    },
+    {
+      "id": "ui",
+      "name": "Create a visible task",
+      "trials": 1,
+      "earned": 5,
+      "available": 5,
+      "score": 1,
+      "passed": true
+    },
+    {
+      "id": "prompt",
+      "name": "Explain a password reset",
+      "trials": 5,
+      "earned": 18,
+      "available": 20,
+      "score": 0.9,
+      "passed": true,
+      "trialScores": [
+        { "trial": 1, "earned": 4, "available": 4 },
+        { "trial": 2, "earned": 3, "available": 4 },
+        { "trial": 3, "earned": 4, "available": 4 },
+        { "trial": 4, "earned": 3, "available": 4 },
+        { "trial": 5, "earned": 4, "available": 4 }
+      ]
+    }
+  ]
+}
