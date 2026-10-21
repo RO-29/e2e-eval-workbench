@@ -7,12 +7,14 @@
 | UI runner | Playwright with Chromium |
 | Eval gate | `0.90` |
 | Live guide | <https://e2e-eval-workbench.pages.dev/> |
-| Beginner eval guide | <https://e2e-eval-workbench.pages.dev/reusable-eval/> |
+| Eval framework guide | <https://e2e-eval-workbench.pages.dev/reusable-eval/> |
 | License | No license file |
 
 This project shows how to check a UI and a backend.
 
 It includes unit tests, integration tests, browser tests, smoke tests, and weighted evals. The eval framework uses JSON files, so you can replace the task application with your product.
+
+The eval framework guide also compares backend, UI, and prompt evaluation. It explains repeated prompt trials and combined scores.
 
 ## 1. What you will run
 

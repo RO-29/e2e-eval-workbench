@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A simple guide to reusable evals for UI and backend products.">
-    <title>Reusable evals, explained simply</title>
+    <meta name="description" content="A simple reusable eval framework for backend, UI, and prompt evaluation.">
+    <title>Reusable Eval Framework</title>
     <style>
       :root {
         color-scheme: light;
@@ -15,6 +15,7 @@
         --blue: #1d70b8;
         --blue-dark: #15558a;
         --green: #137c68;
+        --purple: #6b46a1;
         --yellow: #ffd54a;
         --line: #bcccdc;
         --soft-blue: #e9f3fb;
@@ -181,7 +182,7 @@
 
       .flow {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 12px;
         margin: 34px 0 18px;
       }
@@ -229,56 +230,130 @@
         line-height: 1.45;
       }
 
-      .example-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 22px;
-      }
-
-      .example {
-        padding: 30px;
+      .comparison-wrap {
+        overflow-x: auto;
         background: var(--white);
         border: 1px solid var(--line);
         border-radius: var(--radius);
+        box-shadow: var(--shadow);
       }
 
-      .example.backend { border-top: 8px solid var(--blue); }
-      .example.ui { border-top: 8px solid var(--green); }
+      .comparison {
+        width: 100%;
+        min-width: 820px;
+        border-collapse: collapse;
+        text-align: left;
+      }
 
-      .tag {
-        display: inline-block;
-        margin-bottom: 18px;
-        padding: 4px 10px;
-        background: var(--soft-blue);
-        border-radius: 999px;
+      .comparison th,
+      .comparison td {
+        padding: 18px 20px;
+        border-right: 1px solid #d9e2ec;
+        border-bottom: 1px solid #d9e2ec;
+        vertical-align: top;
+      }
+
+      .comparison th:last-child,
+      .comparison td:last-child { border-right: 0; }
+
+      .comparison tr:last-child th,
+      .comparison tr:last-child td { border-bottom: 0; }
+
+      .comparison thead th {
+        background: var(--ink);
+        color: var(--white);
+        font-size: 1.05rem;
+      }
+
+      .comparison thead th:nth-child(2) { box-shadow: inset 0 7px 0 var(--blue); }
+      .comparison thead th:nth-child(3) { box-shadow: inset 0 7px 0 var(--green); }
+      .comparison thead th:nth-child(4) { box-shadow: inset 0 7px 0 var(--yellow); }
+
+      .comparison tbody th {
+        width: 130px;
         color: var(--blue-dark);
-        font-size: 0.75rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        font-size: 0.92rem;
       }
 
-      .ui .tag {
-        background: var(--soft-green);
-        color: var(--green);
+      .comparison td {
+        color: var(--muted);
+        font-size: 0.94rem;
       }
 
-      .facts {
-        margin: 24px 0 0;
-        padding: 0;
-        list-style: none;
+      .comparison td strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
       }
 
-      .facts li {
+      .trial-explainer {
         display: grid;
-        grid-template-columns: 95px 1fr;
-        gap: 16px;
-        padding: 10px 0;
-        border-top: 1px solid #d9e2ec;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 38px;
+        align-items: center;
       }
 
-      .facts strong { color: var(--ink); }
-      .facts span { color: var(--muted); }
+      .trial-board {
+        padding: 28px;
+        background: var(--ink);
+        border-radius: var(--radius);
+        color: var(--white);
+      }
+
+      .trial-list {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+
+      .trial {
+        padding: 14px 6px;
+        background: #243b53;
+        border-top: 5px solid var(--yellow);
+        text-align: center;
+      }
+
+      .trial span {
+        display: block;
+        color: #bcccdc;
+        font-size: 0.7rem;
+      }
+
+      .trial strong {
+        display: block;
+        margin-top: 5px;
+        font-size: 1.05rem;
+      }
+
+      .trial-total {
+        margin: 0;
+        color: var(--yellow);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .run-policy {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .run-policy div {
+        padding: 16px;
+        background: var(--white);
+        border-left: 5px solid var(--blue);
+      }
+
+      .run-policy div:last-child { border-left-color: var(--purple); }
+
+      .run-policy p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
 
       code {
         padding: 2px 6px;
@@ -323,29 +398,6 @@
         border-radius: 8px;
         font-family: "SFMono-Regular", Consolas, monospace;
         font-weight: 700;
-      }
-
-      .run-box {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 28px;
-        align-items: center;
-        padding: 34px;
-        background: var(--ink);
-        border-radius: var(--radius);
-        color: var(--white);
-      }
-
-      pre {
-        min-width: 280px;
-        margin: 0;
-        padding: 20px;
-        overflow-x: auto;
-        background: #071a2a;
-        border: 1px solid #334e68;
-        border-radius: 10px;
-        color: #d9f5ec;
-        font: 0.88rem/1.7 "SFMono-Regular", Consolas, monospace;
       }
 
       .teach {
@@ -419,7 +471,7 @@
       @media (max-width: 860px) {
         .hero,
         .score-layout,
-        .run-box { grid-template-columns: 1fr; }
+        .trial-explainer { grid-template-columns: 1fr; }
 
         .flow { grid-template-columns: 1fr; }
 
@@ -432,7 +484,6 @@
           content: "↓";
         }
 
-        .example-grid { grid-template-columns: 1fr; }
         .next-steps { grid-template-columns: 1fr 1fr; }
       }
 
@@ -442,10 +493,9 @@
         .hero { padding: 58px 0 50px; }
         section { padding: 54px 0; }
         .definition,
-        .example,
-        .teach,
-        .run-box { padding: 24px; }
-        .facts li { grid-template-columns: 1fr; gap: 2px; }
+        .teach { padding: 24px; }
+        .run-policy { grid-template-columns: 1fr; }
+        .trial-list { grid-template-columns: repeat(5, minmax(52px, 1fr)); }
         .next-steps { grid-template-columns: 1fr; }
         footer .page { flex-direction: column; }
       }
@@ -458,11 +508,10 @@
   <body>
     <header>
       <nav class="page" aria-label="Main navigation">
-        <a class="brand" href="#top">Reusable Eval Guide</a>
+        <a class="brand" href="#top">Reusable Eval Framework</a>
         <ul>
           <li><a href="#flow">The flow</a></li>
           <li><a href="#examples">Examples</a></li>
-          <li><a href="#run">Run it</a></li>
           <li><a href="#teach">Teach it</a></li>
         </ul>
       </nav>
@@ -473,8 +522,8 @@
         <div class="hero">
           <div>
             <p class="eyebrow">Start here</p>
-            <h1>Reusable evals, explained simply.</h1>
-            <p class="lead">Learn the five parts of an eval. See how the same framework checks a backend and a UI. Then use the short script to explain it to another person.</p>
+            <h1>Reusable Eval Framework</h1>
+            <p class="lead">Learn the six stages of an eval. Compare backend, UI, and prompt evaluation. Then use the short script to explain the framework to another person.</p>
           </div>
           <aside class="definition" aria-label="Simple definition">
             <strong>One sentence</strong>
@@ -484,10 +533,10 @@
 
         <section id="flow">
           <p class="eyebrow">The model</p>
-          <h2>Every eval uses the same flow.</h2>
-          <p class="section-intro">The product can change. The flow does not change. This makes the framework reusable.</p>
+          <h2>Every eval uses the same six stages.</h2>
+          <p class="section-intro">The product and run count can change. The stages stay the same. This makes the framework reusable.</p>
 
-          <div class="flow" aria-label="Five parts of an eval">
+          <div class="flow" aria-label="Six stages of an eval">
             <article class="flow-step">
               <span class="step-number">01</span>
               <h3>Case</h3>
@@ -500,16 +549,21 @@
             </article>
             <article class="flow-step">
               <span class="step-number">03</span>
+              <h3>Trial</h3>
+              <p>Runs the same case one time or many times.</p>
+            </article>
+            <article class="flow-step">
+              <span class="step-number">04</span>
               <h3>Evidence</h3>
               <p>Records what the product returned or displayed.</p>
             </article>
             <article class="flow-step">
-              <span class="step-number">04</span>
+              <span class="step-number">05</span>
               <h3>Grader</h3>
               <p>Compares the evidence with a clear rule.</p>
             </article>
             <article class="flow-step">
-              <span class="step-number">05</span>
+              <span class="step-number">06</span>
               <h3>Report</h3>
               <p>Shows each result, the final score, and the gate.</p>
             </article>
@@ -517,62 +571,100 @@
         </section>
 
         <section id="examples">
-          <p class="eyebrow">Two examples</p>
-          <h2>One framework checks two product surfaces.</h2>
-          <p class="section-intro">Only the adapter changes. The case, evidence, grading, score, and report use the same model.</p>
+          <p class="eyebrow">Three examples</p>
+          <h2>Compare backend, UI, and prompt evaluation.</h2>
+          <p class="section-intro">Each column follows the same stages. The adapter, run count, evidence, and grader fit the product behavior.</p>
 
-          <div class="example-grid">
-            <article class="example backend">
-              <span class="tag">Backend eval</span>
-              <h3>Create a task through the API</h3>
-              <ul class="facts">
-                <li><strong>Case</strong><span>Create a task named <code>Publish guide</code>.</span></li>
-                <li><strong>Adapter</strong><span>Send <code>POST /api/tasks</code>.</span></li>
-                <li><strong>Evidence</strong><span>Status is <code>201</code>. The response contains the title.</span></li>
-                <li><strong>Rule</strong><span>Status equals <code>201</code>. Title equals the input.</span></li>
-                <li><strong>Result</strong><span>Both rules pass. The case earns all available points.</span></li>
-              </ul>
-            </article>
+          <div class="comparison-wrap">
+            <table class="comparison">
+              <thead>
+                <tr>
+                  <th scope="col">Stage</th>
+                  <th scope="col">Backend eval</th>
+                  <th scope="col">UI eval</th>
+                  <th scope="col">Prompt eval</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1. Case</th>
+                  <td><strong>Create a task.</strong>Title: <code>Publish guide</code>.</td>
+                  <td><strong>Create a visible task.</strong>Use the task form.</td>
+                  <td><strong>Answer a support question.</strong>Explain how to reset a password.</td>
+                </tr>
+                <tr>
+                  <th scope="row">2. Adapter</th>
+                  <td><strong>HTTP adapter</strong>Send <code>POST /api/tasks</code>.</td>
+                  <td><strong>Browser adapter</strong>Fill the title. Select <code>Add task</code>.</td>
+                  <td><strong>Model adapter</strong>Send the same prompt to the selected model.</td>
+                </tr>
+                <tr>
+                  <th scope="row">3. Trial</th>
+                  <td><strong>Run once.</strong>The API should return the same result.</td>
+                  <td><strong>Run once.</strong>The page should show the same state.</td>
+                  <td><strong>Run five times.</strong>Model wording and quality can change.</td>
+                </tr>
+                <tr>
+                  <th scope="row">4. Evidence</th>
+                  <td><strong>Capture the response.</strong>Status is <code>201</code>. The JSON contains the title.</td>
+                  <td><strong>Capture the page state.</strong>The task list shows the title.</td>
+                  <td><strong>Capture all five answers.</strong>Keep each output and model setting.</td>
+                </tr>
+                <tr>
+                  <th scope="row">5. Grader</th>
+                  <td><strong>Use exact rules.</strong>Check the status and JSON fields.</td>
+                  <td><strong>Use page rules.</strong>Check visible text and task state.</td>
+                  <td><strong>Use a four-point rubric.</strong>Correct steps: 2. Safety: 1. Clear language: 1.</td>
+                </tr>
+                <tr>
+                  <th scope="row">6. Report</th>
+                  <td><strong>5 of 5 points.</strong>Score: <code>1.00</code>. Pass.</td>
+                  <td><strong>5 of 5 points.</strong>Score: <code>1.00</code>. Pass.</td>
+                  <td><strong>18 of 20 points.</strong>Score: <code>0.90</code>. Pass.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-            <article class="example ui">
-              <span class="tag">UI eval</span>
-              <h3>Create a task through the page</h3>
-              <ul class="facts">
-                <li><strong>Case</strong><span>Create a visible task named <code>Publish guide</code>.</span></li>
-                <li><strong>Adapter</strong><span>Fill the title and select <code>Add task</code>.</span></li>
-                <li><strong>Evidence</strong><span>The task list contains the new title.</span></li>
-                <li><strong>Rule</strong><span>Visible text includes <code>Publish guide</code>.</span></li>
-                <li><strong>Result</strong><span>The rule passes. The case earns all available points.</span></li>
-              </ul>
-            </article>
+        <section>
+          <div class="trial-explainer">
+            <div>
+              <p class="eyebrow">Repeated trials</p>
+              <h2>Prompt evals measure consistency.</h2>
+              <p>A model can give a different answer to the same prompt. One successful answer does not prove consistent quality.</p>
+              <p>Run the same case many times. Grade every answer. Add the earned points. Divide by all available points.</p>
+              <div class="run-policy">
+                <div><strong>Backend and UI</strong><p>Use one run for correctness. Add repeat runs when you measure reliability.</p></div>
+                <div><strong>Prompt</strong><p>Use repeated trials because model output can vary.</p></div>
+              </div>
+            </div>
+            <div class="trial-board" aria-label="Five prompt trial scores">
+              <div class="trial-list">
+                <div class="trial"><span>Trial 1</span><strong>4 / 4</strong></div>
+                <div class="trial"><span>Trial 2</span><strong>3 / 4</strong></div>
+                <div class="trial"><span>Trial 3</span><strong>4 / 4</strong></div>
+                <div class="trial"><span>Trial 4</span><strong>3 / 4</strong></div>
+                <div class="trial"><span>Trial 5</span><strong>4 / 4</strong></div>
+              </div>
+              <p class="trial-total">18 earned ÷ 20 available = 0.90</p>
+            </div>
           </div>
         </section>
 
         <section>
           <div class="score-layout">
             <div class="score-box" aria-label="Example score">
-              <span class="number">1.00</span>
-              <p>Final score</p>
+              <span class="number">0.93</span>
+              <p>Combined score</p>
             </div>
             <div>
               <p class="eyebrow">Read the result</p>
-              <h2>A score is a weighted pass rate.</h2>
-              <div class="formula">21 earned ÷ 21 available = 1.00</div>
-              <p>The example gate is <strong>0.90</strong>. The score is <strong>1.00</strong>, so the eval passes. CI stops the deployment when the score is lower than the gate.</p>
+              <h2>Combine points from all three cases.</h2>
+              <div class="formula">(5 + 5 + 18) ÷ (5 + 5 + 20) = 0.93</div>
+              <p>The backend case earns 5 points. The UI case earns 5 points. The prompt case earns 18 points across five trials.</p>
+              <p>The gate is <strong>0.90</strong>. The combined score is <strong>0.93</strong>, so the eval passes. CI stops the deployment when the score is lower than the gate.</p>
             </div>
-          </div>
-        </section>
-
-        <section id="run">
-          <div class="run-box">
-            <div>
-              <p class="eyebrow">Try it</p>
-              <h2>Run the working example.</h2>
-              <p>Clone the GitHub repository. Run these commands in the project folder. Then open <code>reports/evals/report.json</code> to read the result.</p>
-            </div>
-            <pre aria-label="Commands to run">npm install
-npx playwright install chromium
-npm run eval</pre>
           </div>
         </section>
 
@@ -583,7 +675,7 @@ npm run eval</pre>
             <p>Select the button. Read the script aloud. If you can explain each sentence, you understand the model.</p>
             <button id="show-script" type="button" aria-expanded="false" aria-controls="teach-script">Show the explanation</button>
             <div class="teach-script" id="teach-script">
-              <p>An eval checks product behavior. A case tells the product what to do. An adapter performs the action. The adapter captures evidence. A grader compares the evidence with a rule. Each rule has a weight. The report combines the weights into a score. CI stops deployment when the score is too low.</p>
+              <p>An eval checks product behavior. A case defines the action and expected result. An adapter connects the framework to the product. A trial runs the case. Prompt evals use repeated trials because model output can change. The framework captures evidence from every trial. A grader applies clear rules. The report combines all points into a score. CI stops deployment when the score is too low.</p>
             </div>
           </div>
         </section>
@@ -603,7 +695,7 @@ npm run eval</pre>
 
     <footer>
       <div class="page">
-        <span>Reusable Eval Guide</span>
+        <span>Reusable Eval Framework</span>
         <span><a href="https://github.com/RO-29/e2e-eval-workbench">Read the full README</a> · <a href="/">Open the full visual guide</a></span>
       </div>
     </footer>
